@@ -1,0 +1,50 @@
+{
+    "name": "militer/militer-project",
+    "description": "Движок web-сайта",
+    "type": "project",
+    "license": "GPL-3.0-or-later",
+    "authors": [
+        {
+            "name": "Sergei MILITER Tarasov",
+            "email": "militer@htmlcssjs.pro",
+            "homepage": "https://htmlcssjs.pro",
+            "role": "Developer"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Api\\": "Api/",
+            "Admin\\": "Admin/",
+            "Main\\": "Main/",
+            "User\\": "User/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {}
+    },
+    "minimum-stability": "stable",
+    "require": {
+        "ramsey/uuid": "^4.1.0",
+        "militer/mvc-core": "@dev",
+        "militer/cms-core": "@dev"
+    },
+    "require-dev": {
+        "militer/dev-core": "@dev"
+    },
+    "scripts": {
+        "post-install": [
+            "php -r \"rename('ftpConfig.js.example', 'ftpConfig.js');\"",
+            "php -r \"rename('config/config.php.example', 'config/config.php');\"",
+            "php -r \"rename('config/dbConfig.php.example', 'config/dbConfig.php');\"",
+            "php -r \"rename('log/errors.log.example', 'log/errors.log');\""
+        ],
+        "post-create-project-cmd": [
+            "@post-install",
+            "npm i"
+        ],
+        "post-install-cmd": []
+    },
+    "scripts-descriptions": {
+        "post-install": "Run post-install..."
+    }
+}

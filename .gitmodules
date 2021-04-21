@@ -1,0 +1,9 @@
+[submodule "mvc-core"]
+	path = vendor/militer/mvc-core
+	url = https://github.com/htmlcssjspro/mvc-core
+[submodule "cms-core"]
+	path = vendor/militer/cms-core
+	url = https://github.com/htmlcssjspro/cms-core
+[submodule "dev-core"]
+	path = vendor/militer/dev-core
+	url = https://github.com/htmlcssjspro/dev-core

@@ -1,0 +1,20 @@
+@import 'D:/WebDevelopment/Projects/LIBS/scss/variables';
+@import '../variables';
+@import 'D:/WebDevelopment/Projects/LIBS/scss/index';
+
+@include font-face('#{$font-family}');
+
+@import '../common/_common';
+
+@import 'components/body';
+@import 'components/header';
+@import 'components/content';
+@import 'components/main';
+@import 'components/aside';
+@import 'components/footer';
+
+@import '../sections/popups/response';
+@import 'sections/popups/access';
+
+// @import 'D:/WebDevelopment/Projects/LIBS/militerslider/militerslider';
+// @import 'includes/slider';

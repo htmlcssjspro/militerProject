@@ -1,0 +1,26 @@
+.login {
+    & .popup__wrapper {
+        width: 400px;
+    }
+}
+
+.register {
+    & .popup__wrapper {
+        width: 600px;
+    }
+    span[data-required='required']::before {
+        content: '*';
+    }
+    form {
+        & > span,
+        p {
+            font-size: 1.4rem;
+        }
+    }
+}
+
+.access-restore {
+    & .popup__wrapper {
+        width: 400px;
+    }
+}

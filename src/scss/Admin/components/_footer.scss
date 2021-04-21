@@ -1,0 +1,14 @@
+.footer {
+    & {
+        @extend %footer;
+        @extend %container;
+        @extend %dev_container;
+    }
+
+    &__wrapper,
+    &__top,
+    &__bottom {
+        @extend %wrapper;
+        @extend %dev_wrapper;
+    }
+}

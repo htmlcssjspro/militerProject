@@ -1,0 +1,9 @@
+.popup {
+    & {
+        @extend %popup;
+    }
+
+    &__wrapper {
+        @extend %popup__wrapper;
+    }
+}

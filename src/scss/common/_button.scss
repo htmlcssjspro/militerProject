@@ -1,0 +1,49 @@
+.btn {
+    & {
+        @extend %btn;
+    }
+    $btn: &;
+
+    &__inline {
+        @extend #{$btn};
+        display: inline-block;
+    }
+
+    &_enter {
+        @extend #{$btn};
+        margin: 0.5em;
+        // flex-shrink: 0;
+        // flex: 0 0 auto;
+        // flex: 1 0;
+    }
+
+    &_login,
+    &_signin {
+        @extend #{$btn};
+    }
+
+    &_logout,
+    &_signout {
+        @extend #{$btn};
+    }
+
+    &_register-form {
+        @extend #{$btn};
+    }
+
+    &_register {
+        @extend #{$btn};
+    }
+
+    &_access-restore-form {
+        @extend #{$btn};
+    }
+
+    &_access-restore {
+        @extend #{$btn};
+    }
+
+    &_private {
+        @extend #{$btn};
+    }
+}

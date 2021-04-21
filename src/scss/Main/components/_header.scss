@@ -1,0 +1,47 @@
+.header {
+    & {
+        @extend %header;
+        @extend %container;
+        @extend %dev_container;
+    }
+
+    &__top,
+    &__bottom,
+    &__wrapper {
+        @extend %wrapper;
+        @extend %dev_wrapper;
+        @extend %flex-row-sb-c;
+        // @extend %flex-wrap;
+        // flex-wrap: wrap-reverse;
+    }
+
+    &__logo {
+        flex: 0 0 100px;
+        // flex: 1 0;
+        // flex-shrink: 0;
+        height: 50px;
+        width: 100px;
+        margin: -1rem 0;
+        background: url($logo-url) center / contain no-repeat;
+
+        & picture img {
+        }
+    }
+
+    &__nav {
+        @extend .nav;
+        @extend %flex-row-sa-c;
+        // flex: 0 0 auto;
+        // flex: 1 0;
+        // flex-shrink: 0;
+    }
+
+    &__link {
+        @extend .link;
+        margin: 0 0.5em;
+    }
+}
+
+.town-selector {
+    // flex: 0 0 auto;
+}

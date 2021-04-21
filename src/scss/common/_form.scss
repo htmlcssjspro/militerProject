@@ -1,0 +1,47 @@
+form {
+    fieldset {
+        // max-width: 600px;
+    }
+    label {
+        @extend %flex-sb-fs;
+        @extend %flex-wrap;
+        span {
+            &:first-of-type {
+                min-width: 140px;
+                flex: 1 0 20%;
+            }
+            &:nth-of-type(2) {
+                // min-width: 120px;
+                flex: 1 0 50%;
+            }
+            input[type='text'],
+            input[type='url'],
+            textarea {
+                width: 100%;
+                min-width: 200px;
+            }
+            select {
+                // width: 100%;
+            }
+        }
+
+        button {
+            flex: 0 0 100px;
+        }
+    }
+    input {
+        outline-width: 1px;
+        &[data-validation='valid'] {
+            outline-style: auto;
+            outline-color: $green;
+        }
+        &[data-validation='invalid'] {
+            outline-style: auto;
+            outline-color: $red;
+        }
+    }
+    .error_input {
+        // visibility: hidden;
+        color: $danger;
+    }
+}

@@ -1,0 +1,76 @@
+{
+    "env": {
+        "es6": true,
+        "es2017": true,
+        "es2020": true,
+        "browser": true,
+        "node": true,
+        "commonjs": true,
+        "shared-node-browser": true,
+        "jquery": true,
+        "prototypejs": true
+    },
+    "extends": [
+        "eslint:recommended"
+    ],
+    "globals": {
+        "Atomics": "readonly",
+        "SharedArrayBuffer": "readonly"
+    },
+    "parser": "babel-eslint",
+    "parserOptions": {
+        "ecmaVersion": 11,
+        "sourceType": "module", // "script"
+        "ecmaFeatures": {
+            "globalReturn": true,
+            "impliedStrict": true,
+            "jsx": true
+        }
+    },
+    "plugins": [],
+    "rules": {
+        "arrow-spacing": "error",
+        "comma-spacing": "error",
+        "indent": [
+            "error",
+            4,
+            {
+                "SwitchCase": 1
+            }
+        ],
+        "key-spacing": [
+            "error",
+            {
+                "align": "colon"
+            }
+        ],
+        "no-var": "error",
+        "quotes": [
+            "error",
+            "single"
+        ],
+        "semi": [
+            "error",
+            "always"
+        ],
+        "func-call-spacing": [
+            "error",
+            "never"
+        ],
+        "no-alert": "error",
+        "no-console": [
+            "error",
+            { "allow": [
+                    "warn",
+                    "error"
+                ]
+            }
+        ],
+        "space-before-function-paren": [
+            "error",
+            "never"
+        ],
+        "space-infix-ops": "error",
+        "space-unary-ops": "error"
+    }
+}
