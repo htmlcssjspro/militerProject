@@ -54,12 +54,13 @@ const {exec, execSync, spawn, spawnSync} = require('child_process');
 const vinylFtp  = require('vinyl-ftp');
 const ftpConfig = require('./ftpConfig');
 const ftp       = vinylFtp.create({
-    host    : ftpConfig.host,
-    user    : ftpConfig.user,
-    password: ftpConfig.password,
-    parallel: 8,
-    reload  : true,
-    log     : log,
+    host          : ftpConfig.host,
+    user          : ftpConfig.user,
+    password      : ftpConfig.password,
+    parallel      : 8,
+    maxConnections: 16,
+    reload        : true,
+    log           : log,
 });
 
 const DEV  = true;
@@ -363,4 +364,4 @@ function checkStream() {
 
 
 exports.default    = watcher;
-exports.ftpRefresh = ftpRefresh;
+exports.ftprefresh = ftpRefresh;
