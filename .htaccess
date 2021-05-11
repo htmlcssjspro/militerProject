@@ -8,8 +8,10 @@ RewriteRule ^robots.txt$ public/robots.txt [NC,L]
 #RewriteRule ^robots.txt$ public/robots.php [NC,L]
 RewriteRule ^sitemap.xml$ public/sitemap.xml [NC,L]
 #RewriteRule ^sitemap.xml$ public/sitemap.php [NC,L]
+RewriteRule ^400$ public/400.php [L]
 RewriteRule ^404$ public/404.php [L]
 RewriteRule ^410$ public/410.php [L]
+ErrorDocument 400 400
 ErrorDocument 403 404
 ErrorDocument 404 404
 ErrorDocument 410 410

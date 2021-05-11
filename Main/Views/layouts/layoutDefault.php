@@ -12,7 +12,7 @@
 
     <meta name="author" content="Sergei MILITER Tarasov https://htmlcssjs.pro">
 
-    <link rel="preload" href="<?= $Model->mainCSS ?>" as="style">
+    <!-- <link rel="preload" href="<?= $Model->mainCSS ?>" as="style"> -->
     <link rel="preload" href="<?= $Model->mainJS ?>" as="script">
 
     <link rel="stylesheet" href="<?= $Model->mainCSS ?>">
@@ -42,29 +42,20 @@
     </footer>
 
 
-    <?php if ($Model->guest) {
-        require $Model->access;
-    } ?>
-
-    <section class="response dn">
-        <div class="response__wrapper">
-            <P></P>
-        </div>
-    </section>
-
-
     <?php if ($Model->pageCSS) : ?>
-        <?php foreach ($Model->pageCSS as $pageCSS) : ?>
-            <link rel="stylesheet" href="<?= $pageCSS ?>">
-        <?php endforeach; ?>
+        <?php // foreach ($Model->pageCSS as $pageCSS) : ?>
+            <link rel="stylesheet" href="<?= $Model->pageCSS ?>">
+            <!-- <link rel="stylesheet" href="<?= $pageCSS ?>"> -->
+        <?php // endforeach; ?>
     <?php endif; ?>
 
     <script defer src="<?= $Model->mainJS ?>"></script>
 
     <?php if ($Model->pageJS) : ?>
-        <?php foreach ($Model->pageJS as $pageJS) : ?>
-            <script defer src="<?= $pageJS ?>"></script>
-        <?php endforeach; ?>
+        <?php // foreach ($Model->pageJS as $pageJS) : ?>
+            <script defer src="<?= $Model->mainJS ?>"></script>
+            <!-- <script defer src="<?= $pageJS ?>"></script> -->
+        <?php // endforeach; ?>
     <?php endif; ?>
 
 </body>

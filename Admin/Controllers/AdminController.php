@@ -1,14 +1,15 @@
 <?php
 
-namespace App\Controllers;
+namespace Admin\Controllers;
 
-use App\Models\AdminModel;
-use Core\Controller\aPageController;
-use Core\DI\Container;
-use Core\Http\Response\iResponse;
+use Admin\Models\AdminModel;
+use Militer\mvcCore\Controller\aPageController;
+use Militer\mvcCore\DI\Container;
+use Militer\mvcCore\Http\Response\iResponse;
 
 class AdminController extends aPageController
 {
+    private $Model;
     private $adminConfig;
 
     public function __construct(AdminModel $Model)
@@ -34,24 +35,26 @@ class AdminController extends aPageController
     }
 
 
-    public function loginPage()
-    {
-        $this->pageId = 'admin_login_page';
-        $this->Model->layout = $this->adminConfig['login'];
-        // $this->model->pageCSS[] = '/public/css/militerslider.css';
-        // $this->model->pageJS[]  = '/public/js/militerslider.js';
-        $this->render();
-    }
-
-    public function index()
+    public function index(array $routerData)
     {
         $this->adminCheck();
         $this->pageId = 'admin_home_page';
         $this->Model->mainContent = $this->adminConfig['pages']['home'];
         // $this->model->pageCSS[] = '/public/css/militerslider.css';
         // $this->model->pageJS[]  = '/public/js/militerslider.js';
-        $this->render();
+        // $this->render();
     }
+
+    public function loginPage()
+    {
+        $this->pageId = 'admin_login_page';
+        $this->Model->layout = $this->adminConfig['login'];
+        // $this->model->pageCSS[] = '/public/css/militerslider.css';
+        // $this->model->pageJS[]  = '/public/js/militerslider.js';
+        // $this->render();
+    }
+
+
 
     public function pages()
     {
@@ -60,7 +63,7 @@ class AdminController extends aPageController
         $this->Model->popups[] = $this->adminConfig['popups']['newpage'];
         $this->Model->getPagesData();
         $this->pageId = 'admin_pages';
-        $this->render();
+        // $this->render();
     }
 
     public function usersList()
@@ -70,7 +73,7 @@ class AdminController extends aPageController
         $this->Model->getUsersList();
         $this->Model->userDict = Container::get('userDict');
         $this->pageId = 'admin_userslist';
-        $this->render();
+        // $this->render();
     }
 
     public function preferences()
@@ -79,7 +82,7 @@ class AdminController extends aPageController
         $this->Model->mainContent = $this->adminConfig['pages']['preferences'];
         $this->Model->getLoginUrl();
         $this->pageId = 'admin_preferences';
-        $this->render();
+        // $this->render();
     }
 
 
@@ -88,6 +91,7 @@ class AdminController extends aPageController
         if (!isset($_SESSION['admin'])) {
             $Response = Container::get(iResponse::class);
             $Response->notFound();
+            $this->Model->renderNotFound();
         }
     }
 

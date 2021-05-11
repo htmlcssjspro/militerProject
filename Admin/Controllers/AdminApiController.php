@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Controllers;
+namespace Admin\Controllers;
 
-use App\Models\AdminApiModel;
-use Core\Controller\aApiController;
+use Admin\Models\AdminApiModel;
+use Militer\mvcCore\Controller\aApiController;
 
 class AdminApiController extends aApiController
 {

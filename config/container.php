@@ -32,25 +32,28 @@ $aliases = [
 
 $definitions = [
 
-    'config' => function () {
-        return require _ROOT_ . '/config/config.php';
+    'config' => function ($index = NULL) {
+        $config = require _ROOT_ . '/config/config.php';
+        return $index ? $config[$index] : $config;
     },
 
     'dbConfig' => function () {
         return require _ROOT_ . '/config/dbConfig.php';
     },
 
-    'pdo' => function (Container $container) {
-        $db = $container::get(iDB::class);
+    'pdo' => function () {
+        $db = Container::get(iDB::class);
         return $db::connect();
     },
 
-    'messages' => function () {
-        return require _ROOT_ . '/config/messages.php';
+    'messages' => function ($index = NULL) {
+        $messages = require _ROOT_ . '/config/messages.php';
+        return $index ? $messages[$index] : $messages;
     },
 
-    'dictionary' => function () {
-        return require _ROOT_ . '/config/dictionary.php';
+    'dictionary' => function ($index = NULL) {
+        $dictionary = require _ROOT_ . '/config/dictionary.php';
+        return $index ? $dictionary[$index] : $dictionary;
     },
 
 

@@ -58,7 +58,7 @@ const ftp       = vinylFtp.create({
     user          : ftpConfig.user,
     password      : ftpConfig.password,
     parallel      : 8,
-    maxConnections: 16,
+    maxConnections: 64,
     reload        : true,
     log           : log,
 });
@@ -78,8 +78,9 @@ const config = {
             'Api/**/*.php',
             'config/**/*.php',
             'public/**/*',
+            'vendor/militer/**/*.php',
             '.htaccess',
-            'composer.json'
+            'composer.json',
         ],
         path: ftpConfig.path ? ftpConfig.path : '/'
     },
@@ -110,6 +111,8 @@ const config = {
         'src/js/**/*.js',
         'public/*',
         'D:/WebDevelopment/Projects/LIBS/**/(*.scss|*.js)',
+        'vendor/militer/**/*.php',
+        'composer.json',
     ],
     options: {
         src: {
@@ -364,4 +367,4 @@ function checkStream() {
 
 
 exports.default    = watcher;
-exports.ftprefresh = ftpRefresh;
+exports.ftpRefresh = ftpRefresh;

@@ -25,6 +25,17 @@ function vdd($exp, ?string $name = '')
     exit;
 }
 
+function eco($exp = null, ?string $name = '')
+{
+    echo '<br><pre>';
+    if ($name) {
+        echo "<strong>### $name: ###</strong>   ";
+    }
+    echo $exp;
+    echo '</pre><br>';
+}
+
+
 function pre(string $func, $exp = null, ?string $name = '')
 {
     echo '<br><pre>';
@@ -41,6 +52,11 @@ function showTime()
 {
     $time = round((microtime(true) - MILITER_START) * 1000, 3);
     echo "<p>Время выполнения скрипта: <strong>{$time}</strong> мс.</p>";
+}
+
+function method($method)
+{
+    echo '<br>Метод <strong>' . $method . '</strong>';
 }
 
 function whoAmI($file)
