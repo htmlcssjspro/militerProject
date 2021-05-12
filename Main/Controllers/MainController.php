@@ -33,16 +33,14 @@ class MainController extends aPageController
 
     public function index(array $routerData)
     {
+        \prd($routerData, '$routerData');
         $method       = $routerData['method'];
         $requestUri   = $routerData['requestUri'];
         $controller   = $routerData['controller'];
         $action       = $routerData['action'];
         $query        = $routerData['query'];
-        // $requestArray = $routerData['requestArray'];
 
         $this->Model->setPageId($controller, $action);
-        // $this->Model->requestArray = $routerData['requestArray'];
-        // $this->Model->requestUri = $routerData['requestUri'];
 
         $method === 'get'  && $this->Model->renderPage();
         $method === 'post' && $this->Model->renderMain();

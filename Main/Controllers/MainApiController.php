@@ -17,8 +17,9 @@ class MainApiController extends aApiController
     }
 
 
-    public function index()
+    public function index(array $routerData)
     {
+        parent::index($routerData);
     }
 
     public function login()
@@ -58,18 +59,23 @@ class MainApiController extends aApiController
     public function accessRestoreRequest()
     {
         $this->csrfVerify(function ($accessRestoreData) {
-            $accessRestoreMessages = Container::get('messages')['accessRestore'];
+            // $accessRestoreMessages = Container::get('messages', 'accessRestore');
             $email = $accessRestoreData['email'];
             if ($this->User->checkEmail($email)) {
                 if ($this->User->accessRestoreRequest($email)) {
-                    $accessRestoreMessages['success']['message'] =
-                        \str_replace('%email%', $email, $accessRestoreMessages['success']['message']);
-                    $this->Response->sendJson($accessRestoreMessages['success']);
+                    // $accessRestoreMessages['success']['message'] =
+                    //     \str_replace('{{email}}', $email, $accessRestoreMessages['success']['message']);
+                    // $this->Response->sendJson($accessRestoreMessages['success']);
+                    $this->sendMessage('accessRestore', true);
                 } else {
-                    $this->Response->sendJson($accessRestoreMessages['error']);
+                    // $this->Response->sendJson($accessRestoreMessages['error']);
+                    // $this->sendMessage('accessRestore', 'error');
+                    $this->sendMessage('accessRestore', false);
+
                 }
             } else {
-                $this->Response->sendJson($accessRestoreMessages['noUser']);
+                // $this->Response->sendJson($accessRestoreMessages['noUser']);
+                $this->sendMessage('accessRestore', 'noUser');
             }
         });
     }
