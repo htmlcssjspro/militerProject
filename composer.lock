@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6d245b90609c8ff2aa550607a3b31113",
+    "content-hash": "6c00b4957501d862174e9aaacb96d3ba",
     "packages": [
         {
             "name": "brick/math",
@@ -411,6 +411,51 @@
     ],
     "packages-dev": [
         {
+            "name": "militer/assets",
+            "version": "dev-main",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/htmlcssjspro/assets.git",
+                "reference": "a9d998f7d905dea892ed6591c55a2a01ae6006af"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/htmlcssjspro/assets/zipball/a9d998f7d905dea892ed6591c55a2a01ae6006af",
+                "reference": "a9d998f7d905dea892ed6591c55a2a01ae6006af",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.0.0"
+            },
+            "default-branch": true,
+            "type": "library",
+            "autoload": {
+                "psr-4": []
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-3.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Sergei MILITER Tarasov",
+                    "email": "militer@htmlcssjs.pro",
+                    "homepage": "https://htmlcssjs.pro",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Библиотека css+js для проекта militerProject",
+            "homepage": "https://github.com/htmlcssjspro/assets",
+            "keywords": [
+                "militer"
+            ],
+            "support": {
+                "issues": "https://github.com/htmlcssjspro/assets/issues",
+                "source": "https://github.com/htmlcssjspro/assets/tree/main"
+            },
+            "time": "2021-05-20T00:05:46+00:00"
+        },
+        {
             "name": "militer/dev-core",
             "version": "dev-master",
             "source": {
@@ -465,7 +510,8 @@
     "stability-flags": {
         "militer/mvc-core": 20,
         "militer/cms-core": 20,
-        "militer/dev-core": 20
+        "militer/dev-core": 20,
+        "militer/assets": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
