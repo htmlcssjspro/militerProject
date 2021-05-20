@@ -1,20 +1,15 @@
-@import 'D:/WebDevelopment/Projects/LIBS/scss/variables';
+@import '../../../vendor/militer/assets/scss/variables';
 @import '../variables';
-@import 'D:/WebDevelopment/Projects/LIBS/scss/index';
+@import '../../../vendor/militer/assets/scss/index';
 
 @include font-face('#{$font-family}');
 
 @import '../common/_common';
 
-@import 'components/body';
-@import 'components/header';
-@import 'components/content';
-@import 'components/main';
-@import 'components/aside';
-@import 'components/footer';
+@import 'components/_components';
 
 @import '../sections/popups/response';
 @import 'sections/popups/access';
 
-// @import 'D:/WebDevelopment/Projects/LIBS/militerslider/militerslider';
-// @import 'includes/slider';
+@import '../../../vendor/militer/assets/militerslider/militerslider';
+@import 'includes/slider';

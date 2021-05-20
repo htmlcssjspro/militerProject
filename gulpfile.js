@@ -112,6 +112,7 @@ const config = {
         'public/*',
         'D:/WebDevelopment/Projects/LIBS/**/(*.scss|*.js)',
         'vendor/militer/**/*.php',
+        'vendor/militer/assets/**/(*.scss|*.js)',
         'composer.json',
     ],
     options: {
