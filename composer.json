@@ -29,7 +29,8 @@
         "militer/cms-core": "@dev"
     },
     "require-dev": {
-        "militer/dev-core": "@dev"
+        "militer/dev-core": "@dev",
+        "militer/assets": "@dev"
     },
     "scripts": {
         "post-install": [

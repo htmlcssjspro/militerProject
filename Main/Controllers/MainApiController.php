@@ -9,6 +9,8 @@ use Ramsey\Uuid\Uuid;
 
 class MainApiController extends aApiController
 {
+    public MainApiModel $Model;
+
 
     public function __construct(MainApiModel $Model)
     {
@@ -19,34 +21,36 @@ class MainApiController extends aApiController
 
     public function index(array $routerData)
     {
-        parent::index($routerData);
+        \extract($routerData);
+        // $this->methodVerify($method);
+        \method_exists($this, $action)
+            ? $this->$action($query)
+            : $this->Response->badRequestMessage();
     }
 
     public function login()
     {
         $this->csrfVerify(function ($loginData) {
-            $login = $loginData['login'];
-            $password = $loginData['password'];
-            $userUuid = $this->User->login($login, $password);
-            $userUuid && $_SESSION['user_uuid'] = $userUuid;
-            $this->sendMessage('login', !!$userUuid);
+            $this->User->login($loginData);
         });
     }
 
     public function logout()
     {
-        unset($_SESSION['user_uuid'], $_SESSION['status']);
-        $this->sendMessage('logout', true);
+        $this->User->logout();
     }
 
     public function register()
     {
         $this->csrfVerify(function ($registerData) {
+            $this->User->register($registerData);
+
             if ($this->User->checkEmail($registerData['email'])) {
-                $messages = Container::get('messages')['register'];
-                $message = $messages['impossible'];
-                $message['message'] = \str_replace('%email%', $registerData['email'], $message['message']);
-                $this->Response->sendJson($message);
+                // $messages = Container::get('messages', 'register');
+                // $message = $messages['impossible'];
+                // $message['message'] = \str_replace('%email%', $registerData['email'], $message['message']);
+                // $this->Response->sendJson($message);
+                $this->sendMessage('register', 'impossible');
             } else {
                 $registerData['userUuid'] = Uuid::uuid4();
                 $registerData['password'] = \password_hash($registerData['password'], \PASSWORD_DEFAULT);
@@ -71,7 +75,6 @@ class MainApiController extends aApiController
                     // $this->Response->sendJson($accessRestoreMessages['error']);
                     // $this->sendMessage('accessRestore', 'error');
                     $this->sendMessage('accessRestore', false);
-
                 }
             } else {
                 // $this->Response->sendJson($accessRestoreMessages['noUser']);
@@ -98,24 +101,17 @@ class MainApiController extends aApiController
 
 
 
+    public function popup(array $query)
+    {
+        $popup = $query[0];
+        $this->Model->popup($popup);
+    }
+
+
+
     public function documentation()
     {
         $message = 'api_documentation';
-        $this->Response->sendText($message);
-    }
-
-    public function example()
-    {
-        $message = 'text';
-        $this->Response->sendText($message);
-
-        $message = '<html></html>';
-        $this->Response->sendHtml($message);
-
-        $message = [
-            'name1' => 'value1',
-            'name2' => 'value2',
-        ];
-        $this->Response->sendJson($message);
+        $this->Response->sendMessage($message);
     }
 }

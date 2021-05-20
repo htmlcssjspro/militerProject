@@ -5,7 +5,7 @@
     <a class="header__logo" href="/"></a>
     <nav class="header__nav">
         <?php foreach ($Model->headerNav as $link) : ?>
-            <a class="header__link" href="/<?= $link['page_url'] ?>"><?= $link['label'] ?></a>
+            <a class="header__link" href="/<?= $link['page_uri'] ?>"><?= $link['label'] ?></a>
         <?php endforeach; ?>
     </nav>
 

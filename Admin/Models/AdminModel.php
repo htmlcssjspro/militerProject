@@ -2,43 +2,73 @@
 
 namespace Admin\Models;
 
+use Militer\mvcCore\DI\Container;
 use Militer\mvcCore\Model\aPageModel;
 
 class AdminModel extends aPageModel
 {
-    public array $pagesData = [];
-    public string $loginUrl;
 
 
     public function __construct()
     {
         parent::__construct();
+        $this->sitemapTable  = self::ADMIN_SITEMAP_TABLE;
+        $this->layoutsTable  = self::ADMIN_LAYOUTS_TABLE;
+        $this->sectionsTable = self::ADMIN_SECTIONS_TABLE;
+        $this->views = \ADMIN_VIEWS;
     }
 
 
-    public function getAdminAsideData()
+    public function init(string $requestUri)
     {
-        $sql = "SELECT `label`, `page_url` FROM {$this->sitemapTable} WHERE `admin_aside`=1";
-        $this->adminAsideData = $this->PDO->query($sql)->fetchAll();
+        $requestUri === '/admin/login' && $this->login();
+        $this->adminCheck();
+        parent::init($requestUri);
     }
 
-    public function getPagesData()
+
+    private function login()
     {
-        $sql = "SELECT `label`, `page_url`, `title`, `description`, `h1` FROM `{$this->sitemapTable}` WHERE `admin`=1";
-        $this->pagesData = $this->PDO->query($sql)->fetchAll();
+        \ob_start();
+        $Model = $this;
+        require "{$this->views}/layouts/login.php";
+        $page = \ob_get_clean();
+        $this->Response->sendPage($page);
     }
 
-    public function getUsersList()
+
+
+    protected function getAdminAsideData()
     {
-        $sql = "SELECT `user_uuid`, `username`, `name`, `email`, `status`, `phone`, `last_visit`, `register_date` FROM {$this->usersTable}";
-        $this->usersList = $this->PDO->query($sql)->fetchAll();
+        $table = $this->sitemapTable;
+        // $table = self::ADMIN_SITEMAP_TABLE;
+        $sql = "SELECT `label`, `page_uri` FROM `{$table}` WHERE `admin_aside`=1";
+        return self::$PDO::queryFetchAll($sql);
     }
 
-    public function getLoginUrl()
+    protected function getPagesData()
     {
-        $sql = "SELECT `page_url` FROM {$this->sitemapTable} WHERE `page_id`='admin_login_page'";
-        $this->loginUrl = $this->PDO->query($sql)->fetchColumn();
+        $table = self::MAIN_SITEMAP_TABLE;
+        $sql = "SELECT `label`, `page_uri`, `title`, `description`, `h1` FROM `{$table}` WHERE `admin`=1";
+        return self::$PDO::queryFetchAll($sql);
+    }
+
+    protected function getUsersList()
+    {
+        $table = self::USERS_TABLE;
+        $sql = "SELECT `user_uuid`, `username`, `name`, `email`, `status`, `phone`, `last_visit`, `register_date` FROM `{$table}`";
+        return self::$PDO::queryFetchAll($sql);
+    }
+
+    protected function getLoginUri()
+    {
+        $sql = "SELECT `page_uri` FROM `{$this->sitemapTable}` WHERE `page_id`='admin_login_page'";
+        return self::$PDO::queryFetchColumn($sql);
     }
 
 
+    private function adminCheck()
+    {
+        !isset($_SESSION['admin']) && $this->Response->notFoundPage();
+    }
 }

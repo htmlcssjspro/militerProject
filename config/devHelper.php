@@ -1,52 +1,67 @@
 <?php
 
-
-function pr($exp, ?string $name = '')
+function pre(string $func, $exp = null, string $name = '')
 {
-    pre('print_r', $exp, $name);
-}
-
-function prd($exp, ?string $name = '')
-{
-    pr($exp, $name);
-    showTime();
-    exit;
-}
-
-function vd($exp, ?string $name = '')
-{
-    pre('var_dump', $exp, $name);
-}
-
-function vdd($exp, ?string $name = '')
-{
-    vd($exp, $name);
-    showTime();
-    exit;
-}
-
-function eco($exp = null, ?string $name = '')
-{
-    echo '<br><pre>';
-    if ($name) {
-        echo "<strong>### $name: ###</strong>   ";
-    }
-    echo $exp;
-    echo '</pre><br>';
-}
-
-
-function pre(string $func, $exp = null, ?string $name = '')
-{
-    echo '<br><pre>';
+    echo '<pre>';
     if ($name) {
         echo "<strong>### $name: ###</strong><br>";
     }
     call_user_func($func, $exp);
-    echo '<br>';
-    debug_print_backtrace();
-    echo '</pre><br>';
+    echo '</pre>';
 }
+
+
+function pr($exp, string $name = '')
+{
+    pre('print_r', $exp, $name);
+}
+
+function prd($exp, string $name = '')
+{
+    pr($exp, $name);
+    echo '<pre>';
+    debug_print_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
+    echo '</pre>';
+    showTime();
+    exit;
+}
+
+function vd($exp, string $name = '')
+{
+    pre('var_dump', $exp, $name);
+}
+
+function vdd($exp, string $name = '')
+{
+    vd($exp, $name);
+    echo '<pre>';
+    debug_print_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
+    echo '</pre>';
+    showTime();
+    exit;
+}
+
+
+function echoc($exp = null, string $name = '')
+{
+    echo '<pre>';
+    if ($name) {
+        echo "<strong>### $name: ###</strong>   ";
+    }
+    echo $exp;
+    echo '</pre>';
+}
+
+function echod($exp = null, string $name = '')
+{
+    echoc($exp, $name);
+    echo '<pre>';
+    debug_print_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
+    echo '</pre>';
+    showTime();
+    exit;
+}
+
 
 function showTime()
 {
@@ -54,9 +69,13 @@ function showTime()
     echo "<p>Время выполнения скрипта: <strong>{$time}</strong> мс.</p>";
 }
 
-function method($method)
+function method()
 {
-    echo '<br>Метод <strong>' . $method . '</strong>';
+    $backTrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
+    $method = "{$backTrace[1]['class']}{$backTrace[1]['type']}{$backTrace[1]['function']}";
+    // $method = "{$backTrace[1]['class']}::{$backTrace[1]['function']}";
+    $line = $backTrace[0]['line'];
+    echo '<pre>Метод: <strong>' . $method . '  </strong>Строка: <strong>' . $line . '</strong></pre>';
 }
 
 function whoAmI($file)

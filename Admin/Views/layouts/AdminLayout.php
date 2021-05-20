@@ -40,12 +40,6 @@
     </footer>
 
 
-    <?php if ($Model->layoutPopups) {
-        foreach ($Model->layoutPopups as $layoutPopup) {
-            require $layoutPopup;
-        }
-    } ?>
-
     <?php if ($Model->pageCSS) : ?>
         <?php foreach ($Model->pageCSS as $pageCSS) : ?>
             <link rel="stylesheet" href="<?= $pageCSS ?>">

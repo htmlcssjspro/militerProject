@@ -6,19 +6,29 @@ use Militer\mvcCore\Model\aApiModel;
 
 class AdminApiModel extends aApiModel
 {
+
+
     public function __construct()
     {
         parent::__construct();
     }
 
 
-    public function login($login)
+    public function login(array $adminLoginData)
     {
-        $sql = "SELECT `password` FROM `{$this->adminTable}` WHERE `login`=?";
-        $pdostmt = $this->PDO->prepare($sql);
-        $pdostmt->execute([$login]);
-        return $pdostmt->fetch();
+        \extract($adminLoginData);
+        $passwordHash = $this->getLoginData($login);
+        \password_verify($password, $passwordHash) && $_SESSION['admin'] = $login;
     }
+    private function getLoginData(string $login)
+    {
+        $table = self::ADMIN_TABLE;
+        $sql = "SELECT `password` FROM `{$table}` WHERE `login`=?";
+        return self::$PDO::prepFetchColumn($sql, $login);
+    }
+
+
+
 
     public function updateLoginUrl($loginUrl)
     {
@@ -38,5 +48,4 @@ class AdminApiModel extends aApiModel
         $pdostmt = $this->PDO->prepare($sql);
         return $pdostmt->execute([$password, $_SESSION['admin']]);
     }
-
 }

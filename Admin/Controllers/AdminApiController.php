@@ -7,6 +7,8 @@ use Militer\mvcCore\Controller\aApiController;
 
 class AdminApiController extends aApiController
 {
+    public AdminApiModel $Model;
+
 
     public function __construct(AdminApiModel $Model)
     {
@@ -15,11 +17,20 @@ class AdminApiController extends aApiController
     }
 
 
+    public function index(array $routerData)
+    {
+        \extract($routerData);
+        // $this->methodVerify($method);
+        \method_exists($this, $action)
+            ? $this->$action()
+            : $this->Response->badRequestMessage();
+    }
+
+
     public function login()
     {
         $this->csrfVerify(function ($adminLoginData) {
-            $passwordHash = $this->Model->login($adminLoginData['login'])['password'];
-            \password_verify($adminLoginData['password'], $passwordHash) && $_SESSION['admin'] = $adminLoginData['login'];
+            $this->Model->login($adminLoginData);
         });
     }
 

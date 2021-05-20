@@ -7,3 +7,6 @@
 [submodule "dev-core"]
 	path = vendor/militer/dev-core
 	url = https://github.com/htmlcssjspro/dev-core
+[submodule "assets"]
+	path = vendor/militer/assets
+	url = https://github.com/htmlcssjspro/assets

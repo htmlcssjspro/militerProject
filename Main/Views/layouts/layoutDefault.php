@@ -12,6 +12,7 @@
 
     <meta name="author" content="Sergei MILITER Tarasov https://htmlcssjs.pro">
 
+    <link rel="icon" href="/public/favicon.ico" type="image/x-icon">
     <!-- <link rel="preload" href="<?= $Model->mainCSS ?>" as="style"> -->
     <link rel="preload" href="<?= $Model->mainJS ?>" as="script">
 

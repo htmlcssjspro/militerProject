@@ -4,7 +4,7 @@
         <input type="hidden" name="csrf" value="<?= $_SESSION['csrf_token'] ?>">
         <label>
             <span>Адрес страницы ввода пароля администратора</span>
-            <span><input type="text" name="login-url" value="<?= $Model->loginUrl ?>"></span>
+            <span><input type="text" name="login-uri" value="<?= $Model->getLoginUri() ?>"></span>
         </label>
         <label>
             <span>Новый логин администратора</span>

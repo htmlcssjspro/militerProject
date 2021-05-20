@@ -11,8 +11,8 @@
                 <span><input name="password" type="password" data-required="required"></span>
             </label>
             <button class="btn_login" type="submit">Войти</button>
-            <button class="btn_access-restore" type="button" data-popup=".access-restore">Восстановить доступ</button>
-            <button class="btn_register" type="button" data-popup=".register">Зарегистрироваться</button>
+            <button class="btn_access-restore" type="button" data-popup="access-restore">Восстановить доступ</button>
+            <button class="btn_register" type="button" data-popup="register">Зарегистрироваться</button>
         </form>
     </div>
 </section>

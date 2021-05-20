@@ -1,7 +1,7 @@
 <h1><?= $Model->h1 ?></h1>
 <section class="admin__pages">
     <button class="btn_newpage" type="button" data-popup=".newpage">Добавить новую страницу</button>
-    <?php foreach ($Model->pagesData as $pageData) : ?>
+    <?php foreach ($Model->getPagesData() as $pageData) : ?>
         <form action="/admin/api/updatesitemap" method="POST">
             <input type="hidden" name="csrf" value="<?= $_SESSION['csrf_token'] ?>">
             <fieldset>
@@ -11,8 +11,8 @@
                     <span><input type="text" name="label" value="<?= $pageData['label'] ?>"></span>
                 </label>
                 <label>
-                    <span>page_url</span>
-                    <span><input type="text" name="page_url" value="<?= $pageData['page_url'] ?>"></span>
+                    <span>page_uri</span>
+                    <span><input type="text" name="page_uri" value="<?= $pageData['page_uri'] ?>"></span>
                 </label>
                 <label>
                     <span>title</span>
@@ -32,9 +32,3 @@
     <?php endforeach; ?>
     <button class="btn_newpage" type="button" data-popup=".newpage">Добавить новую страницу</button>
 </section>
-
-<?php if ($Model->popups) {
-    foreach ($Model->popups as $popup) {
-        require $popup;
-    }
-} ?>

@@ -3,14 +3,17 @@
 namespace User;
 
 use Militer\mvcCore\User\aUser;
+use Ramsey\Uuid\Uuid;
 
 class User extends aUser
 {
 
-    public string $uuid;
-    public string $name;
-    public string $status;
-    public string $balance;
+    public string $uuid    = 'guest';
+    public string $name    = 'Гость';
+    public string $status  = 'guest';
+    public string $balance = '0';
+
+    private $table = self::USERS_TABLE;
 
 
     public function __construct()
@@ -22,38 +25,58 @@ class User extends aUser
 
     private function init()
     {
-        $this->uuid = $_SESSION['user_uuid'] ?? 'guest';
+        if (!empty($_SESSION['user_uuid'])) {
+            $this->uuid = $_SESSION['user_uuid'];
+            $this->setUserData();
+        }
+    }
+    private function setUserData()
+    {
+        \extract($this->getUserData());
+        $this->name    = $username;
+        $this->status  = $status;
+        $this->balance = $balance;
+    }
+    private function getUserData()
+    {
+        $sql = "UPDATE {$this->table} SET `last_visit`=CURRENT_DATE() WHERE `user_uuid`='{$this->uuid}'";
+        self::$PDO::query($sql);
+
+        $sql = "SELECT `username`, `status`, `balance` FROM {$this->table} WHERE `user_uuid`='{$this->uuid}'";
+        return self::$PDO::queryFetch($sql);
     }
 
     public function checkEmail($email)
     {
-        $sql = "SELECT 1 FROM {$this->usersTable} WHERE `email`=?";
-        $pdostmt = $this->PDO->prepare($sql);
-        $pdostmt->execute([$email]);
-        return $pdostmt->fetchColumn();
+        $table = self::USERS_TABLE;
+        $sql = "SELECT 1 FROM {$table} WHERE `email`=?";
+        return self::$PDO::prepFetchColumn($sql, $email);
     }
 
-    public function login($login, $password)
+    public function login($loginData)
     {
+        \extract($loginData);
         $loginData = $this->getLoginData($login);
         if (\password_verify($password, $loginData['password'])) {
             $_SESSION['user_uuid'] = $loginData['user_uuid'];
-            return  $loginData['user_uuid'];
+            $this->Response->sendResponse('login', true);
         }
-        return false;
-        return \password_verify($password, $loginData['password']) ? $loginData['user_uuid'] : false;
+        $this->Response->sendResponse('login', false);
     }
     private function getLoginData($email)
     {
-        $sql = "SELECT `user_uuid`, `password` FROM `{$this->usersTable}` WHERE `email`=?";
-        $pdostmt = $this->PDO->prepare($sql);
-        $pdostmt->execute([$email]);
-        return $pdostmt->fetch();
+        $sql = "SELECT `user_uuid`, `password` FROM `{$this->table}` WHERE `email`=?";
+        return self::$PDO::prepFetch($sql, $email);
+    }
+    public function logout()
+    {
+        unset($_SESSION['user_uuid'], $_SESSION['status']);
+        $this->Response->sendMessage('logout', true);
     }
 
-    public function insertRegisterData($registerData)
+    private function insertRegisterData($registerData)
     {
-        $sql = "INSERT INTO {$this->usersTable} (
+        $sql = "INSERT INTO {$this->table} (
             `user_uuid`,
             `username`,
             `name`,
@@ -73,24 +96,27 @@ class User extends aUser
             CURRENT_DATE(),
             CURRENT_DATE()
             )";
-        $pdostmt = $this->PDO->prepare($sql);
-        return $pdostmt->execute([
+
+        $params = [
             ':user_uuid' => $registerData['userUuid'],
             ':username'  => $registerData['login'],
             ':name'      => $registerData['name'],
             ':email'     => $registerData['email'],
             ':password'  => $registerData['password'],
             ':phone'     => $registerData['phone'],
-        ]);
+        ];
+
+        return self::$PDO::execute($sql, $params);
     }
 
     public function accessRestoreRequest($email)
     {
         $password = $this->generatePassword();
         $passwordHash = \password_hash($password, \PASSWORD_DEFAULT);
-        $sql = "UPDATE {$this->usersTable} SET `restore_password`='$passwordHash' WHERE `email`=?";
-        $pdostmt = $this->PDO->prepare($sql);
-        if ($pdostmt->execute([$email])) {
+        $sql = "UPDATE {$this->table} SET `restore_password`='$passwordHash' WHERE `email`=?";
+        // $pdostmt = $this->PDO->prepare($sql);
+        if (self::$PDO::execute($sql, $email)) {
+            // if ($pdostmt->execute([$email])) {
             $subject = 'Восстановление доступа';
             $message = "
             <html>
@@ -153,33 +179,15 @@ class User extends aUser
 
     private function getRestorePasswordHash($email)
     {
-        $sql = "SELECT `restore_password` FROM {$this->usersTable} WHERE `email`=?";
-        $pdostmt = $this->PDO->prepare($sql);
-        $pdostmt->execute([$email]);
-        return $pdostmt->fetchColumn();
+        $sql = "SELECT `restore_password` FROM {$this->table} WHERE `email`=?";
+        return self::$PDO::prepFetchColumn($sql, $email);
     }
     private function updatePasswordHash($email, $passwordHash)
     {
-        $sql = "UPDATE {$this->usersTable} SET `password`='$passwordHash', `restore_password`=NULL WHERE `email`=?";
-        $pdostmt = $this->PDO->prepare($sql);
-        return $pdostmt->execute([$email]);
-    }
+        $sql = "UPDATE {$this->table} SET `password`='{$passwordHash}', `restore_password`=NULL WHERE `email`=?";
+        return self::$PDO::execute($sql, $email);
 
-
-    public function setUserData()
-    {
-        $userData = $this->getUserData();
-        $this->uuid    = $userData['user_uuid'];
-        $this->name    = $userData['user_name'];
-        $this->status  = $userData['status'];
-        $this->balance = $userData['balance'];
-    }
-    private function getUserData()
-    {
-        $sql = "UPDATE {$this->usersTable} SET `last_visit`=CURRENT_DATE() WHERE `user_uuid`='{$this->uuid}'";
-        $this->PDO->query($sql);
-
-        $sql = "SELECT `user_uuid`, `username`, `status`, `balance` FROM {$this->usersTable} WHERE `user_uuid`='{$this->uuid}'";
-        return $this->PDO->query($sql)->fetch();
+        // $pdostmt = $this->PDO->prepare($sql);
+        // return $pdostmt->execute([$email]);
     }
 }
