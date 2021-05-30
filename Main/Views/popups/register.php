@@ -23,11 +23,11 @@
             <br>
             <label>
                 <span>Пароль *</span>
-                <span><input name="new-password" type="password" placeholder="password" data-required="required"></span>
+                <span><input name="new_password" type="password" placeholder="password" data-required="required"></span>
             </label>
             <label>
                 <span>Пароль еще раз *</span>
-                <span><input name="confirm-new-password" type="password" placeholder="password" data-required="required"></span>
+                <span><input name="confirm_new_password" type="password" placeholder="password" data-required="required"></span>
             </label>
             <span>Придумайте пароль</span>
             <br>

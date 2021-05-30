@@ -14,38 +14,26 @@ class AdminApiModel extends aApiModel
     }
 
 
-    public function login(array $adminLoginData)
+    public function preferences(array $preferencesData)
     {
-        \extract($adminLoginData);
-        $passwordHash = $this->getLoginData($login);
-        \password_verify($password, $passwordHash) && $_SESSION['admin'] = $login;
-    }
-    private function getLoginData(string $login)
-    {
-        $table = self::ADMIN_TABLE;
-        $sql = "SELECT `password` FROM `{$table}` WHERE `login`=?";
-        return self::$PDO::prepFetchColumn($sql, $login);
+        $this->adminCheck();
+        \extract($preferencesData);
+
+        $this->Response->sendResponse('adminPreferences', true);
+        $this->Response->sendResponse('adminPreferences', false);
     }
 
 
-
-
-    public function updateLoginUrl($loginUrl)
+    private function adminCheck()
     {
-        $sql = "UPDATE {$this->sitemapTable} SET `page_url`=? WHERE `page_id`='admin_login_page'";
-        $pdostmt = $this->PDO->prepare($sql);
-        return $pdostmt->execute([$loginUrl]);
+        !isset($_SESSION['admin_uuid']) && $this->renderLoginPage();
     }
-    public function updateLogin($login)
+    private function renderLoginPage()
     {
-        $sql = "UPDATE {$this->adminTable} SET `login`=? WHERE `login`=?";
-        $pdostmt = $this->PDO->prepare($sql);
-        return  $pdostmt->execute([$login, $_SESSION['admin']]);
-    }
-    public function updatePassword($password)
-    {
-        $sql = "UPDATE {$this->adminTable} SET `password`=? WHERE `login`=?";
-        $pdostmt = $this->PDO->prepare($sql);
-        return $pdostmt->execute([$password, $_SESSION['admin']]);
+        \ob_start();
+        $Model = $this;
+        require "{$this->views}/layouts/login.php";
+        $page = \ob_get_clean();
+        $this->Response->sendPage($page);
     }
 }

@@ -20,9 +20,9 @@ class AdminApiController extends aApiController
     public function index(array $routerData)
     {
         \extract($routerData);
-        // $this->methodVerify($method);
+        $this->methodVerify($method);
         \method_exists($this, $action)
-            ? $this->$action()
+            ? $this->$action($query)
             : $this->Response->badRequestMessage();
     }
 
@@ -30,40 +30,50 @@ class AdminApiController extends aApiController
     public function login()
     {
         $this->csrfVerify(function ($adminLoginData) {
-            $this->Model->login($adminLoginData);
+            $this->User->adminLogin($adminLoginData);
         });
     }
+
+    public function logout()
+    {
+        $this->User->adminLogout();
+    }
+
 
     public function preferences()
     {
         $this->csrfVerify(function ($preferencesData) {
-            $this->adminCheck();
-            $result = $this->Model->login(['login' => $_SESSION['admin'], 'password' => $preferencesData['password']]);
-            !$result && $this->Response->sendJson(['message' => 'Неверный пароль администратора']);
-
-            $result = $this->Model->updateLoginUrl($preferencesData['login-url']);
-            !$result && $this->Response->sendJson(['message' => 'Ошибка обновления страницы ввода пароля администратора']);
-
-            if ($preferencesData['new-login']) {
-                $result = $this->Model->updateLogin($preferencesData['new-login']);
-                !$result && $this->Response->sendJson(['message' => 'Ошибка обновления логина администратора']);
-                $result && $_SESSION['admin'] = $preferencesData['new-login'];
-            }
-
-            if ($preferencesData['new-password']) {
-                $passwordHash = \password_hash($preferencesData['new-password'], \PASSWORD_DEFAULT);
-                $result = $this->Model->updatePassword($passwordHash);
-                !$result && $this->Response->sendJson(['message' => 'Ошибка обновления пароля администратора']);
-            }
-            $this->Response->sendJson(['message' => 'Настройки успешно обновлены']);
+            $this->Model->preferences($preferencesData);
         });
     }
 
-
-    private function adminCheck()
+    public function adminPasswordChange()
     {
-        if (!isset($_SESSION['admin'])) {
-            $this->Response->notFound();
-        }
+        $this->csrfVerify(function ($adminPasswordChangeData) {
+            $this->User->adminPasswordChange($adminPasswordChangeData);
+        });
     }
+
+    public function addNewAdmin()
+    {
+        $this->csrfVerify(function ($newAdminData) {
+            $this->User->addAdmin($newAdminData);
+        });
+    }
+
+    public function activateAdmin()
+    {
+        \method();
+        $POST = $this->Request->getPOST();
+        \pr($POST, '$POST');
+        \prd($_POST, '$_POST');
+    }
+
+
+
+    public function test()
+    {
+        $this->User->test();
+    }
+
 }

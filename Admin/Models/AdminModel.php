@@ -21,21 +21,9 @@ class AdminModel extends aPageModel
 
     public function init(string $requestUri)
     {
-        $requestUri === '/admin/login' && $this->login();
         $this->adminCheck();
         parent::init($requestUri);
     }
-
-
-    private function login()
-    {
-        \ob_start();
-        $Model = $this;
-        require "{$this->views}/layouts/login.php";
-        $page = \ob_get_clean();
-        $this->Response->sendPage($page);
-    }
-
 
 
     protected function getAdminAsideData()
@@ -60,15 +48,17 @@ class AdminModel extends aPageModel
         return self::$PDO::queryFetchAll($sql);
     }
 
-    protected function getLoginUri()
-    {
-        $sql = "SELECT `page_uri` FROM `{$this->sitemapTable}` WHERE `page_id`='admin_login_page'";
-        return self::$PDO::queryFetchColumn($sql);
-    }
-
 
     private function adminCheck()
     {
-        !isset($_SESSION['admin']) && $this->Response->notFoundPage();
+        !isset($_SESSION['admin_uuid']) && $this->renderLoginPage();
+    }
+    private function renderLoginPage()
+    {
+        \ob_start();
+        $Model = $this;
+        require "{$this->views}/layouts/login.php";
+        $page = \ob_get_clean();
+        $this->Response->sendPage($page);
     }
 }

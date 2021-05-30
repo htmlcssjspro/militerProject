@@ -32,7 +32,7 @@ $userDict = $Model->getUserDictionary();
                     <td>
                         <form action="/admin/api/status" method="POST">
                             <input type="hidden" name="csrf" value="<?= $_SESSION['csrf_token'] ?>">
-                            <input type="hidden" name="user-uuid" value="<?= $userData['user_uuid'] ?>">
+                            <input type="hidden" name="user_uuid" value="<?= $userData['user_uuid'] ?>">
                             <select name="status">
                                 <?php foreach ($userDict['statusDict'] as $status => $interpretation) : ?>
                                     <option value="<?= $status ?>" <?= $userData['status'] === $status ? 'selected' : '' ?>><?= $interpretation ?></option>

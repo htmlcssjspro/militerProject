@@ -2,19 +2,7 @@
 <html lang="ru">
 
 <head>
-
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-
-    <title><?= $Model->title ?></title>
-    <meta name="description" content="<?= $Model->description ?>">
-
-    <meta name="author" content="Sergei MILITER Tarasov https://htmlcssjs.pro">
-
-    <link rel="stylesheet" href="<?= $Model->mainCSS ?>">
-    <link rel="preload" href="<?= $Model->mainJS ?>" as="script">
-
+    <?php require $Model->head; ?>
 </head>
 
 <body>
@@ -23,18 +11,21 @@
         <?php require $Model->header; ?>
     </header>
 
-    <main id="main" class="main">
-        <?php require $Model->mainContent; ?>
-    </main>
+    <div class="content">
+        <div class="content__wrapper">
+            <main id="main" class="main">
+                <?php require $Model->mainContent; ?>
+            </main>
+
+            <aside id="aside" class="aside">
+                <?php require $Model->aside; ?>
+            </aside>
+        </div>
+    </div>
 
     <footer id="footer" class="footer">
         <?php require $Model->footer; ?>
     </footer>
-
-
-    <?php if ($Model->guest) {
-        require $Model->sections['access'];
-    } ?>
 
 
     <?php if ($Model->pageCSS) : ?>

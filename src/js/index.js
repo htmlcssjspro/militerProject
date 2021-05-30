@@ -26,7 +26,6 @@ if ($townSelector) {
 }
 
 const $offerForm = document.querySelector('.offer__form');
-
 if ($offerForm) {
     let position = 1;
     $offerForm.addEventListener('click', event => {

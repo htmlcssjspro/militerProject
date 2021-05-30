@@ -48,7 +48,7 @@
     </style>
     <div class="errorPageBox">
         <div class="errorPageImage"></div>
-        <div class="errorPageText">Вы можете зайти на <a href="/">Главную</a>.</a></div>
+        <div class="errorPageText">Вы можете перейти на <a href="/">Главную</a>.</a></div>
     </div>
 </body>
 

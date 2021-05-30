@@ -14,6 +14,7 @@ define('ADMIN_VIEWS',       _ROOT_ . '/Admin/Views');
 define('ERROR_LOG_FILE', _ROOT_ . '/log/errors.log');
 
 define('_PUBLIC_', _ROOT_ . '/public');
+
 define('PAGE_404', _PUBLIC_ . '/404.php');
 define('PAGE_400', _PUBLIC_ . '/400.php');
 

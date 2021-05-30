@@ -11,12 +11,13 @@
     <meta name="author" content="Sergei MILITER Tarasov https://htmlcssjs.pro">
 
     <style>
-        .main{
+        .main {
             display: flex;
             justify-content: center;
             align-items: center;
         }
-        .login{
+
+        .login {
             width: 200px;
         }
     </style>
@@ -41,10 +42,15 @@
 
     <script>
         'use strict';
-        document.querySelector('.btn_login').addEventListener('click', event=>{
+        document.querySelector('.btn_login').addEventListener('click', event => {
             event.preventDefault();
             const $form = document.querySelector('form');
-            fetch($form.action, {method: $form.method, body: new FormData($form)});
+            fetch($form.action, {
+                    method: $form.method,
+                    body: new FormData($form)
+                })
+                .then(response => response.json())
+                .then(response => response.reload && window.location.reload(true));
         });
     </script>
 

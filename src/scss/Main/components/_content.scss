@@ -2,6 +2,7 @@
     & {
         @extend %container;
         @extend %dev_container;
+        color: $blue;
     }
 
     &__wrapper {

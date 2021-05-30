@@ -4,11 +4,11 @@
 const {src, dest, watch, series, parallel} = require('gulp');
 
 //* Gulp Common
-const del = require('del');
+const del        = require('del');
 const gulpif     = require('gulp-if');
 const rename     = require('gulp-rename');
 const sourcemaps = require('gulp-sourcemaps');
-const webp = require('gulp-webp');
+const webp       = require('gulp-webp');
 const webpConfig = {
     preset      : 'default', // string: *default | photo | picture | drawing | icon | text
     quality     : 75, // number: 0 - 100, *75
@@ -95,8 +95,8 @@ const config = {
     scss: {
         src   : './src/scss',
         output: './public/css',
-        main  : './src/scss/Main/main.scss',
-        admin : './src/scss/Admin/admin.scss',
+        main  : './src/scss/main.scss',
+        admin : './src/scss/admin.scss',
     },
     img: {
         globs: [
@@ -110,7 +110,6 @@ const config = {
         'src/scss/**/*.scss',
         'src/js/**/*.js',
         'public/*',
-        'D:/WebDevelopment/Projects/LIBS/**/(*.scss|*.js)',
         'vendor/militer/**/*.php',
         'vendor/militer/assets/**/(*.scss|*.js)',
         'composer.json',
@@ -210,22 +209,20 @@ function scssMain(filePath) {
 
 function scss(filePath) {
     let {destPath, ftpDest} = getDest(filePath, config.scss.src, config.scss.output);
-    destPath = path.dirname(destPath);
-    ftpDest  = path.dirname(ftpDest);
+    // destPath = path.dirname(destPath);
+    // ftpDest  = path.dirname(ftpDest);
     return src(filePath)
         .pipe(gulpif(DEV, sourcemaps.init()))
+        .pipe(gulpif(DEV, sourcemaps.identityMap()))
         .pipe(sassGlob())
         .pipe(sass.sync().on('error', sass.logError))
         .pipe(gulpif(DEV,
-            postcss([
-                autoprefixer(),
-            ]),
-            postcss([
-                autoprefixer(),
-                cssnano()
-            ]))
+            postcss([autoprefixer()]),
+            postcss([autoprefixer(), cssnano()]))
         )
-        .pipe(gulpif(DEV, sourcemaps.write('.')))
+        .pipe(gulpif(DEV,
+            sourcemaps.write('./maps', {sourceRoot: '/src/scss'}))
+        )
         .pipe(gulpif(PROD, gcmq()))
         .pipe(dest(destPath))
         .pipe(gulpif(config.useFTP, ftp.dest(ftpDest)));
@@ -236,13 +233,8 @@ function css(filePath) {
     return src(filePath)
         .pipe(gulpif(DEV, sourcemaps.init()))
         .pipe(gulpif(DEV,
-            postcss([
-                autoprefixer(),
-            ]),
-            postcss([
-                autoprefixer(),
-                cssnano()
-            ]))
+            postcss([autoprefixer()]),
+            postcss([autoprefixer(), cssnano()]))
         )
         .pipe(gulpif(DEV, sourcemaps.write('.')))
         .pipe(gulpif(PROD, gcmq()))

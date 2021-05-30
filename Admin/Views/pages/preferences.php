@@ -1,22 +1,14 @@
+<h1><?= $Model->h1 ?></h1>
 <section class="preferences">
-    <h1>Настройки</h1>
-    <form action="/admin/api/preferences" method="POST">
+    <form action="/admin/api/admin-password-change" method="POST">
         <input type="hidden" name="csrf" value="<?= $_SESSION['csrf_token'] ?>">
         <label>
-            <span>Адрес страницы ввода пароля администратора</span>
-            <span><input type="text" name="login-uri" value="<?= $Model->getLoginUri() ?>"></span>
-        </label>
-        <label>
-            <span>Новый логин администратора</span>
-            <span><input type="text" name="new-login"></span>
-        </label>
-        <label>
             <span>Новый пароль администратора</span>
-            <span><input type="password" name="new-password"></span>
+            <span><input type="password" name="new_password"></span>
         </label>
         <label>
             <span>Подтверждение</span>
-            <span><input type="password" name="confirm-new-password"></span>
+            <span><input type="password" name="confirm_new_password"></span>
         </label>
         <label>
             <span>Текущий пароль администратора</span>
@@ -24,5 +16,24 @@
         </label>
         <button type="submit">Обновить</button>
     </form>
+
+    <?php if ($Model->User->adminStatus === 'superadmin') : ?>
+        <form action="/admin/api/add-new-admin" method="POST">
+            <input type="hidden" name="csrf" value="<?= $_SESSION['csrf_token'] ?>">
+            <label>
+                <span>Email нового администратора</span>
+                <span><input type="email" name="email"></span>
+            </label>
+            <label>
+                <span>Имя нового администратора</span>
+                <span><input type="text" name="name"></span>
+            </label>
+            <label>
+                <span>Текущий пароль администратора</span>
+                <span><input type="password" name="password" data-required="required"></span>
+            </label>
+            <button type="submit">Добавить нового администратора</button>
+        </form>
+    <?php endif; ?>
 
 </section>

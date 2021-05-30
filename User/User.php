@@ -2,6 +2,7 @@
 
 namespace User;
 
+use Militer\mvcCore\DI\Container;
 use Militer\mvcCore\User\aUser;
 use Ramsey\Uuid\Uuid;
 
@@ -13,7 +14,12 @@ class User extends aUser
     public string $status  = 'guest';
     public string $balance = '0';
 
-    private $table = self::USERS_TABLE;
+    public string $adminUuid;
+    public string $adminName;
+    public string $adminStatus;
+
+    private $usersTable = self::USERS_TABLE;
+    private $adminTable = self::ADMIN_TABLE;
 
 
     public function __construct()
@@ -29,7 +35,12 @@ class User extends aUser
             $this->uuid = $_SESSION['user_uuid'];
             $this->setUserData();
         }
+        if (!empty($_SESSION['admin_uuid'])) {
+            $this->adminUuid = $_SESSION['admin_uuid'];
+            $this->setAdminData();
+        }
     }
+
     private function setUserData()
     {
         \extract($this->getUserData());
@@ -39,44 +50,75 @@ class User extends aUser
     }
     private function getUserData()
     {
-        $sql = "UPDATE {$this->table} SET `last_visit`=CURRENT_DATE() WHERE `user_uuid`='{$this->uuid}'";
-        self::$PDO::query($sql);
+        $sql = "UPDATE {$this->usersTable} SET `last_visit`=CURRENT_DATE() WHERE `user_uuid`=?";
+        self::$PDO::execute($sql, $this->uuid);
 
-        $sql = "SELECT `username`, `status`, `balance` FROM {$this->table} WHERE `user_uuid`='{$this->uuid}'";
-        return self::$PDO::queryFetch($sql);
+        $sql = "SELECT `username`, `status`, `balance`
+        FROM {$this->usersTable} WHERE `user_uuid`=?";
+        return self::$PDO::prepFetch($sql, $this->uuid);
     }
 
-    public function checkEmail($email)
-    {
-        $table = self::USERS_TABLE;
-        $sql = "SELECT 1 FROM {$table} WHERE `email`=?";
-        return self::$PDO::prepFetchColumn($sql, $email);
-    }
 
-    public function login($loginData)
+    public function login(array $loginData)
     {
         \extract($loginData);
         $loginData = $this->getLoginData($login);
-        if (\password_verify($password, $loginData['password'])) {
-            $_SESSION['user_uuid'] = $loginData['user_uuid'];
-            $this->Response->sendResponse('login', true);
-        }
-        $this->Response->sendResponse('login', false);
+        $verify = $loginData && \password_verify($password, $loginData['password']);
+        $verify && $_SESSION['user_uuid'] = $loginData['user_uuid'];
+        $this->Response->sendResponse('login', $verify);
     }
-    private function getLoginData($email)
+    private function getLoginData(string $email)
     {
-        $sql = "SELECT `user_uuid`, `password` FROM `{$this->table}` WHERE `email`=?";
+        $sql = "SELECT `user_uuid`, `password`
+        FROM `{$this->usersTable}` WHERE `email`=?";
         return self::$PDO::prepFetch($sql, $email);
     }
+
     public function logout()
     {
-        unset($_SESSION['user_uuid'], $_SESSION['status']);
-        $this->Response->sendMessage('logout', true);
+        unset($_SESSION['user_uuid']);
+        $this->Response->sendResponse('logout', true);
     }
 
-    private function insertRegisterData($registerData)
+
+    public function userPasswordChange(array $userPasswordChangeData)
     {
-        $sql = "INSERT INTO {$this->table} (
+        \extract($userPasswordChangeData);
+        $this->userPasswordVerify($password);
+        $passwordHash = \password_hash($new_password, \PASSWORD_DEFAULT);
+        $update = $this->updateUserPassword($passwordHash);
+        $this->Response->sendResponse('userPasswordChange', $update);
+    }
+    private function userPasswordVerify(string $password): void
+    {
+        $passwordHash = $this->getUserPassword();
+        $verify = \password_verify($password, $passwordHash);
+        !$verify && $this->Response->sendResponse('userVerify', false);
+    }
+    private function getUserPassword(): string
+    {
+        $sql = "SELECT `password` FROM `{$this->usersTable}` WHERE `user_uuid`=?";
+        return self::$PDO::prepFetchColumn($sql, $this->userUuid);
+    }
+    private function updateUserPassword(string $passwordHash): bool
+    {
+        $sql = "UPDATE `{$this->usersTable}` SET `password`='{$passwordHash}' WHERE `user_uuid`=?";
+        return self::$PDO::execute($sql, $this->userUuid);
+    }
+
+
+    public function register(array $registerData)
+    {
+        $this->checkEmail($this->usersTable, $registerData['email']) &&
+            $this->Response->sendResponse('register', 'exists');
+        $registerData['userUuid'] = Uuid::uuid4();
+        $result = $this->insertRegisterData($registerData);
+        $this->Response->sendResponse('register', $result);
+    }
+    private function insertRegisterData(array $registerData): bool
+    {
+        \extract($registerData);
+        $sql = "INSERT INTO {$this->usersTable} (
             `user_uuid`,
             `username`,
             `name`,
@@ -98,96 +140,249 @@ class User extends aUser
             )";
 
         $params = [
-            ':user_uuid' => $registerData['userUuid'],
-            ':username'  => $registerData['login'],
-            ':name'      => $registerData['name'],
-            ':email'     => $registerData['email'],
-            ':password'  => $registerData['password'],
-            ':phone'     => $registerData['phone'],
+            ':user_uuid' => $userUuid,
+            ':username'  => $login,
+            ':name'      => $name,
+            ':email'     => $email,
+            ':password'  => $password,
+            ':phone'     => $phone
         ];
 
         return self::$PDO::execute($sql, $params);
     }
 
-    public function accessRestoreRequest($email)
+
+    public function accessRestoreRequest(array $accessRestoreData)
     {
+        \extract($accessRestoreData);
+
+        !$this->checkEmail($this->usersTable, $email) &&
+            $this->Response->sendResponse('accessRestore', 'noUser');
         $password = $this->generatePassword();
         $passwordHash = \password_hash($password, \PASSWORD_DEFAULT);
-        $sql = "UPDATE {$this->table} SET `restore_password`='$passwordHash' WHERE `email`=?";
-        // $pdostmt = $this->PDO->prepare($sql);
-        if (self::$PDO::execute($sql, $email)) {
-            // if ($pdostmt->execute([$email])) {
-            $subject = 'Восстановление доступа';
-            $message = "
-            <html>
-                <head>
-                <title>Восстановление доступа</title>
-                </head>
-                <body>
-                    <p>Здравствуйте!</p>
-                    <p>Получен запрос на восстановление доступа к системе</p>
-                    <p>Ваши новые данные для доступа:</p>
-                    <table>
-                        <tr>
-                        <td>Логин:</td><td>$email</td>
-                        </tr>
-                        <tr>
-                        <td>Пароль:</td><td>$password</td>
-                        </tr>
-                        <tr>
-                        <td>
-                        <form action=\"{$_SERVER['REQUEST_SCHEME']}://{$_SERVER['SERVER_NAME']}/api/access-restore\" method=\"POST\">
-                            <input type=\"hidden\" name=\"csrf\" value=\"{$_SESSION['csrf_token']}\">
-                            <input type=\"hidden\" name=\"email\" value=\"$email\">
-                            <input type=\"hidden\" name=\"password\" value=\"$password\">
-                            <button type=\"submit\">Восстановить доступ</button>
-                        </form>
-                        </td>
-                        </tr>
-                    </table>
-                    <p>Сохраните эти данные</p>
-                    <p>В случае их утери, или при подозрении в их утечке, воспользуйтесь системой восстановления доступа для создания нового пароля</p>
-                    <p>Если Вы не отправляли запрос, то проигнорируйте это сообщение</p>
-                    <p>Успешной работы!</p>
-                </body>
-            </html>
-        ";
-            $additional_headers = [
-                'MIME-Version' => '1.0',
-                'Content-type' => 'text/html;charset=UTF-8',
-                'From'         => $this->config['email']['noreply'],
-            ];
+        $result = $this->updateRestorePassword($email, $passwordHash);
+        $result = $result && $this->sendRestoreEmail($email, $password);
+        $this->Response->sendResponse('accessRestore', $result);
+    }
+    private function updateRestorePassword(string $email, string $passwordHash)
+    {
+        $sql = "UPDATE {$this->usersTable} SET `restore_password`='{$passwordHash}' WHERE `email`=?";
+        return self::$PDO::execute($sql, $email);
+    }
+    private function sendRestoreEmail(string $email, string $password): bool
+    {
+        $subject = 'Восстановление доступа';
+        \ob_start();
+        require Container::get('config', 'restoreEmail');
+        $message = \ob_get_clean();
+        $additional_headers = [
+            'MIME-Version' => '1.0',
+            'Content-type' => 'text/html; charset=UTF-8',
+            'From'         => Container::get('config', 'email')['noreply'],
+        ];
 
-            return mail($email, $subject, $message, $additional_headers);
-            // imap_mail($to, $subject, $message, $additional_headers, $cc, $bcc, $rpath);
-            // imap_mail ( string $to , string $subject , string $message [, string $additional_headers = NULL [, string $cc = NULL [, string $bcc = NULL [, string $rpath = NULL ]]]] ) : bool
-        } else {
-            return false;
-        }
+        return \mail($email, $subject, $message, $additional_headers);
     }
 
 
-    public function accessRestore($email, $password)
+    public function accessRestore(array $accessRestoreData)
     {
-        $restorePasswordHash = $this->getRestorePasswordHash($email);
-        if ($this->checkEmail($email) && \password_verify($password, $restorePasswordHash)) {
+        \extract($accessRestoreData);
+        $restoreData = $this->getRestoreData($email);
+        $verify = fn () => \password_verify($password, $restoreData['restore_password']);
+        if ($restoreData && $verify()) {
             $passwordHash = \password_hash($password, \PASSWORD_DEFAULT);
-            return $this->updatePasswordHash($email, $passwordHash);
+            $update = $this->updatePasswordHash($email, $passwordHash);
+            $update && $_SESSION['user_uuid'] = $restoreData['user_uuid'];
+            $update && $this->Response->homePage();
+        } else {
+            $this->Response->notFoundPage();
         }
-        return false;
+    }
+    private function getRestoreData(string $email)
+    {
+        $sql = "SELECT `user_uuid`, `restore_password` FROM {$this->usersTable} WHERE `email`=?";
+        return self::$PDO::prepFetch($sql, $email);
+    }
+    private function updatePasswordHash(string $email, string $passwordHash): bool
+    {
+        $sql = "UPDATE {$this->usersTable}
+        SET `password`='{$passwordHash}', `restore_password`=NULL WHERE `email`=?";
+        return self::$PDO::execute($sql, $email);
     }
 
-    private function getRestorePasswordHash($email)
+
+
+    private function setAdminData()
     {
-        $sql = "SELECT `restore_password` FROM {$this->table} WHERE `email`=?";
+        \extract($this->getAdminData());
+        $this->adminName = $name;
+        $this->adminEmail = $email;
+        $this->adminStatus = $admin_status;
+    }
+    private function getAdminData()
+    {
+        $sql = "UPDATE {$this->adminTable}
+        SET `last_visit`=CURRENT_DATE() WHERE `admin_uuid`=?";
+        self::$PDO::execute($sql, $this->adminUuid);
+
+        $sql = "SELECT `name`, `email`, `admin_status`
+        FROM `{$this->adminTable}` WHERE `admin_uuid`=?";
+        return self::$PDO::prepFetch($sql, $this->adminUuid);
+    }
+
+    private function getAdminsData()
+    {
+        $sql = "SELECT
+        `admin_uuid`,
+        `email`,
+        `name`,
+        `admin_status`,
+        `status`,
+        `last_visit`,
+        `register_date`
+        FROM `{$this->adminTable}`";
+        return self::$PDO::queryFetchAll($sql);
+    }
+
+
+    public function adminLogin(array $adminLoginData)
+    {
+        \extract($adminLoginData);
+        $adminLoginData = $this->getAdminLoginData($login);
+        $verify = $adminLoginData && \password_verify($password, $adminLoginData['password']);
+        $verify && $_SESSION['admin_uuid'] = $adminLoginData['admin_uuid'];
+        $this->Response->sendResponse('adminLogin', $verify);
+    }
+    private function getAdminLoginData(string $email)
+    {
+        $sql = "SELECT `admin_uuid`, `password`
+        FROM `{$this->adminTable}` WHERE `email`=? AND `status`='active'";
+        return self::$PDO::prepFetch($sql, $email);
+    }
+
+    public function adminLogout()
+    {
+        unset($_SESSION['admin_uuid']);
+        $this->Response->sendResponse('adminLogout', true);
+    }
+
+
+    public function adminPasswordChange(array $adminPasswordChangeData)
+    {
+        \extract($adminPasswordChangeData);
+        $this->adminPasswordVerify($password);
+        $passwordHash = \password_hash($new_password, \PASSWORD_DEFAULT);
+        $update = $this->updateAdminPassword($passwordHash);
+        $this->Response->sendResponse('adminPasswordChange', $update);
+    }
+    private function adminPasswordVerify(string $password): void
+    {
+        $passwordHash = $this->getAdminPassword();
+        $verify = \password_verify($password, $passwordHash);
+        !$verify && $this->Response->sendResponse('adminVerify', false);
+        // return $verify;
+    }
+    private function getAdminPassword(): string
+    {
+        $sql = "SELECT `password` FROM `{$this->adminTable}` WHERE `admin_uuid`=?";
+        return self::$PDO::prepFetchColumn($sql, $this->adminUuid);
+    }
+    private function updateAdminPassword(string $passwordHash): bool
+    {
+        $sql = "UPDATE `{$this->adminTable}` SET `password`='{$passwordHash}' WHERE `admin_uuid`=?";
+        return self::$PDO::execute($sql, $this->adminUuid);
+    }
+
+
+    public function addAdmin(array $newAdminData): void
+    {
+        $this->checkEmail($this->adminTable, $newAdminData['email']) &&
+            $this->Response->sendResponse('adminAdd', 'exists');
+        $newAdminData['adminUuid'] = Uuid::uuid4();
+        $password = $this->generatePassword();
+        $passwordHash = \password_hash($password, \PASSWORD_DEFAULT);
+        $newAdminData['password'] = $passwordHash;
+        $insert = $this->insertNewAdminData($newAdminData);
+        $newAdminData['password'] = $password;
+        $send = $insert && $this->sendNewAdminEmail($newAdminData);
+        $this->Response->sendResponse('adminAdd', $send);
+    }
+    private function insertNewAdminData(array $newAdminData)
+    {
+        \extract($newAdminData);
+        $sql = "INSERT INTO `{$this->adminTable}` (
+            `admin_uuid`,
+            `email`,
+            `password`,
+            `name`,
+            `admin_status`,
+            `status`,
+            `last_visit`,
+            `register_date`
+            )
+            VALUES (
+                :adminUuid,
+                :email,
+                :password,
+                :name,
+                'admin',
+                'active',
+                CURRENT_DATE(),
+                CURRENT_DATE()
+                )
+        ";
+        $params = [
+            ':adminUuid' => $adminUuid,
+            ':email'     => $email,
+            ':password'  => $password,
+            ':name'      => $name,
+        ];
+        return self::$PDO::execute($sql, $params);
+    }
+    private function sendNewAdminEmail(array $newAdminData)
+    {
+        \extract($newAdminData);
+        $emailFile = \ADMIN_VIEWS . '/email/newAdmin.php';
+        $action = 'admin/api/activate-admin';
+        $href = 'admin/activate-admin';
+        $subject = 'Доступ к панели администратора';
+        $from = 'noreply@htmlcssjs.pro';
+        $emailData = \compact('email', 'name', 'emailFile', 'action', 'href', 'password', 'subject', 'from');
+        return $this->sendEmail($emailData);
+    }
+
+
+
+
+    private function checkEmail(string $table, string $email)
+    {
+        $sql = "SELECT 1 FROM `{$table}` WHERE `email`=?";
         return self::$PDO::prepFetchColumn($sql, $email);
     }
-    private function updatePasswordHash($email, $passwordHash)
-    {
-        $sql = "UPDATE {$this->table} SET `password`='{$passwordHash}', `restore_password`=NULL WHERE `email`=?";
-        return self::$PDO::execute($sql, $email);
 
-        // $pdostmt = $this->PDO->prepare($sql);
-        // return $pdostmt->execute([$email]);
+    private function sendEmail(array $emailData): bool
+    {
+        \extract($emailData);
+        $url = "{$_SERVER['REQUEST_SCHEME']}://{$_SERVER['SERVER_NAME']}";
+        $action && $action = "{$url}/{$action}";
+        $href && $href = "{$url}/{$href}";
+        \ob_start();
+        require $emailFile;
+        $message = \ob_get_clean();
+        $additional_headers = [
+            'MIME-Version' => '1.0',
+            'Content-type' => 'text/html; charset=UTF-8',
+            'From'         => $from,
+        ];
+        return \mail($email, $subject, $message, $additional_headers);
+    }
+
+
+
+    public function test()
+    {
+        $admins = $this->getAdminsData();
+        \prd($admins, '$admins');
     }
 }
