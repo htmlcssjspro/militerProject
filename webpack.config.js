@@ -1,32 +1,37 @@
 'use strict';
 
 const path = require('path');
+const c    = require('ansi-colors');
 
+// eslint-disable-next-line no-unused-vars
 module.exports = function(env, argv) {
-
-    const mode       = (env && env.development) ? 'development' : 'production';
-    const outputPath = path.resolve(__dirname, './public/js');
-    const publicPath = 'js/';
+    // eslint-disable-next-line no-console
+    console.log(c.cyanBright('WebpackConfig: '), __filename);
+    // const mode = (argv.mode && argv.mode === 'development') ? 'development' : 'production';
+    const mode =
+        env.dev || (argv.mode && argv.mode === 'development')
+            ? 'development' : 'production';
+    // const dev = mode === 'development';
     const output = {
         filename  : '[name].js',
-        path      : outputPath,
-        publicPath: publicPath
+        path      : path.resolve(__dirname, './public/js'),
+        publicPath: 'js/'
     };
     const devServer  = {
         contentBase: path.resolve(__dirname, './public'),
         overlay    : true
     };
-    const devtool = 'source-map';
+    const devtool = env.dev ? 'source-map' : 'nosources-source-map';
     const target = ['web', 'es6'];
     const optimization = {
-        minimize: true, // *true, false
+        minimize: env.dev ? false : true
     };
 
     return [
         {
             name : 'main',
             entry: {
-                main: './src/js/index.js'
+                main: './src/js/main.js'
             },
             output      : output,
             mode        : mode,
