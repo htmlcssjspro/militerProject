@@ -104,12 +104,16 @@ config.scss.pub   = `${config.pub}/css`;
 config.scss.globs = `${config.scss.src}/**/*.scss`;
 config.scss.main  = `${config.scss.src}/main.scss`;
 config.scss.admin = `${config.scss.src}/admin.scss`;
+config.scss.sm    = './maps';
+config.scss.smOpt = {sourceRoot: `/${config.scss.src}`};
 
 config.css = {};
 config.css.src      = `${config.src}/css`;
 config.css.pub      = `${config.pub}/css`;
 config.css.srcGlobs = `${config.css.src}/**/*.css`;
 config.css.pubGlobs = `${config.css.pub}/**/*.css`;
+config.css.sm       = './maps';
+config.css.smOpt    = {sourceRoot: `/${config.css.src}`};
 
 config.img = {};
 config.img.src      = `${config.src}/img`;
@@ -126,6 +130,8 @@ config.vendor.src = 'vendor/militer';
 config.vendor.php = [
     `${config.vendor.src}/mvc-core/src/**/*.php`,
     `${config.vendor.src}/cms-core/src/**/*.php`,
+    'vendor/composer/*.php',
+    'vendor/autoload.php',
 ];
 config.vendor.assets = [
     `${config.vendor.src}/assets/src/**/*.js`,
@@ -272,7 +278,7 @@ function scss(filePath) {
             postcss([autoprefixer(), cssnano()]))
         )
         .pipe(gulpif(DEV,
-            sourcemaps.write('./maps', {sourceRoot: `/${config.scss.src}`}))
+            sourcemaps.write(config.scss.sm, config.scss.smOpt))
         )
         .pipe(gulpif(PROD, gcmq()))
         .pipe(dest(destPath))
@@ -287,7 +293,8 @@ function css(filePath) {
             postcss([autoprefixer()]),
             postcss([autoprefixer(), cssnano()]))
         )
-        .pipe(gulpif(DEV, sourcemaps.write('./maps', {sourceRoot: `/${config.css.src}`})))
+        .pipe(gulpif(DEV,
+            sourcemaps.write(config.css.sm, config.css.smOpt)))
         .pipe(gulpif(PROD, gcmq()))
         .pipe(dest(destPath))
         .pipe(gulpif(USE_FTP, ftp.dest(ftpDest)));
@@ -336,6 +343,8 @@ function unlink(filePath) {
 function ftpRefresh(cb) {
     if (USE_FTP) {
         const cleanGlobs = ftp.globs.map(item => path.posix.join(ftp.root, item));
+        cleanGlobs.push('/*');
+        console.log('cleanGlobs: ', cleanGlobs);
         const cleanOptions = {
             base  : ftp.root,
             buffer: false,
