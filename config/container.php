@@ -58,10 +58,16 @@ $definitions = [
         return $pdo::connect();
     },
 
+    'email' => function (string $index = NULL) {
+        $email = require _ROOT_ . '/config/email.php';
+        return $index ? $email[$index] : $email;
+    },
+
     'messages' => function (string $index = NULL) {
         $messages = require _ROOT_ . '/config/messages.php';
         return $index ? $messages[$index] : $messages;
     },
+
     'response' => function (string $index = NULL) {
         $response = require _ROOT_ . '/config/response.php';
         return $index ? $response[$index] : $response;

@@ -59,7 +59,7 @@ const ftp       = vinylFtp.create({
     user          : ftpConfig.user,
     password      : ftpConfig.password,
     parallel      : 8,
-    maxConnections: 64,
+    maxConnections: 1024,
     reload        : true,
     log           : log,
 });
@@ -344,7 +344,6 @@ function ftpRefresh(cb) {
     if (USE_FTP) {
         const cleanGlobs = ftp.globs.map(item => path.posix.join(ftp.root, item));
         cleanGlobs.push('/*');
-        console.log('cleanGlobs: ', cleanGlobs);
         const cleanOptions = {
             base  : ftp.root,
             buffer: false,

@@ -5,7 +5,7 @@
     <?php require $Model->head; ?>
 </head>
 
-<body>
+<body class="body">
 
     <header id="header" class="header">
         <?php require $Model->header; ?>

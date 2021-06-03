@@ -5,7 +5,7 @@
     <?php require $Model->head; ?>
 </head>
 
-<body>
+<body class="body">
 
     <main id="main" class="main">
         <?php require $Model->mainContent; ?>
