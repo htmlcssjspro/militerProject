@@ -41,6 +41,10 @@ $definitions = [
         return $index ? $config[$index] : $config;
     },
 
+    'routes' => function () {
+        return require _ROOT_ . '/config/routes.php';
+    },
+
     'dbConfig' => function () {
         return require _ROOT_ . '/config/dbConfig.php';
     },

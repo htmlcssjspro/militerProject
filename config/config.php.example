@@ -1,63 +1,8 @@
 <?php
 
 return [
-    'main' => [
-        'layout' => MAIN_VIEWS . '/layouts/layoutDefault.php',
-        // 'layout' => MAIN_VIEWS . '/layouts/layoutLanding.php',
-        'header' => MAIN_VIEWS . '/components/header.php',
-        'footer' => MAIN_VIEWS . '/components/footer.php',
-        'aside'  => MAIN_VIEWS . '/components/aside.php',
-
-        'css' => '/public/css/main.css',
-        'js'  => '/public/js/main.js',
-
-        'pages' => [
-            'home'  => MAIN_VIEWS . '/pages/homePage.php',
-            'page1' => MAIN_VIEWS . '/pages/page1.php',
-            'page2' => MAIN_VIEWS . '/pages/page2.php',
-            'page3' => MAIN_VIEWS . '/pages/page3.php',
-            'page4' => MAIN_VIEWS . '/pages/page4.php',
-            'page5' => MAIN_VIEWS . '/pages/page5.php',
-            'user'  => MAIN_VIEWS . '/pages/user.php',
-        ],
-    ],
-    'admin' => [
-        'layout' => ADMIN_VIEWS . '/layouts/AdminLayout.php',
-        'login'  => ADMIN_VIEWS . '/layouts/login.php',
-        'header' => ADMIN_VIEWS . '/components/header.php',
-        'footer' => ADMIN_VIEWS . '/components/footer.php',
-        'aside'  => ADMIN_VIEWS . '/components/aside.php',
-
-        'layoutPopups' => [
-            'response' => ADMIN_VIEWS . '/popups/response.php',
-        ],
-
-        'css' => '/public/css/admin.css',
-        'js'  => '/public/js/admin.js',
-
-        'pages' => [
-            'home'        => ADMIN_VIEWS . '/pages/homePage.php',
-            'pages'       => ADMIN_VIEWS . '/pages/pages.php',
-            'usersList'   => ADMIN_VIEWS . '/pages/usersList.php',
-            'preferences' => ADMIN_VIEWS . '/pages/preferences.php',
-        ],
-        'popups' => [
-            'newpage' => ADMIN_VIEWS . '/popups/newpage.php',
-        ],
-    ],
-    'includes' => [
-        'userProfile' => MAIN_VIEWS . '/includes/userProfile.php',
-    ],
-    'sections' => [
-        'access' => MAIN_VIEWS . '/sections/access.php',
-        'slider' => MAIN_VIEWS . '/sections/militerslider.php',
-    ],
-    'dbTables' => [
-        'sitemap' => 'sitemap',
-        'users'   => 'users',
-        'admin'   => 'admin',
-    ],
     'email' => [
         'noreply' => 'noreply@htmlcssjs.pro',
     ],
+    'restoreEmail' => MAIN_VIEWS . '/email/restoreEmail.php',
 ];
