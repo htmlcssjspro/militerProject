@@ -36,48 +36,42 @@ $aliases = [
 
 
 $definitions = [
-    'config' => function (string $index = NULL) {
-        $config = require _ROOT_ . '/config/config.php';
-        return $index ? $config[$index] : $config;
-    },
-
-    'routes' => function () {
-        return require _ROOT_ . '/config/routes.php';
+    'config' => function (string $index = null, string $name = null) {
+        $config = require _CONFIG_ . '/config.php';
+        $config = $index ? $config[$index] : $config;
+        $config = $index && $name ? $config[$name] : $config;
+        return $config;
     },
 
     'dbConfig' => function () {
-        return require _ROOT_ . '/config/dbConfig.php';
+        return require _CONFIG_ . '/dbConfig.php';
     },
 
     'PDO' => function () {
         return Container::get(iPDO::class);
     },
 
-    'pdo' => function () {
-        $pdo = Container::get(iDB::class);
-        return $pdo::connect();
-    },
-
-    'email' => function (string $index = NULL) {
-        $email = require _ROOT_ . '/config/email.php';
-        return $index ? $email[$index] : $email;
-    },
-
-    'messages' => function (string $index = NULL) {
-        $messages = require _ROOT_ . '/config/messages.php';
-        return $index ? $messages[$index] : $messages;
-    },
-
-    'response' => function (string $index = NULL) {
-        $response = require _ROOT_ . '/config/response.php';
+    'response' => function (string $index = null) {
+        $response = require _CONFIG_ . '/response.php';
         return $index ? $response[$index] : $response;
     },
 
-    'dictionary' => function (string $index = NULL) {
-        $dictionary = require _ROOT_ . '/config/dictionary.php';
+    'dictionary' => function (string $index = null) {
+        $dictionary = require _CONFIG_ . '/dictionary.php';
         return $index ? $dictionary[$index] : $dictionary;
     },
+
+    // 'email' => function (string $index = null) {
+    //     $email = require _CONFIG_ . '/email.php';
+    //     return $index ? $email[$index] : $email;
+    // },
+
+    // 'pdo' => function () {
+    //     $pdo = Container::get(iDB::class);
+    //     return $pdo::connect();
+    // },
+
 ];
 
 $sets = array_merge($aliases, $definitions);
-Container::sets($sets);
+Container::sets(array_merge($aliases, $definitions));

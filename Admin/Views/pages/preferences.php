@@ -29,7 +29,7 @@
                 <span><input type="text" name="name"></span>
             </label>
             <label>
-                <span>Текущий пароль администратора</span>
+                <span>Текущий пароль суперадмина</span>
                 <span><input type="password" name="password" data-required="required"></span>
             </label>
             <button type="submit">Добавить нового администратора</button>

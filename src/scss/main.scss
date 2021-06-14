@@ -1,9 +1,9 @@
-@import '../../vendor/militer/assets/src/scss/normalize';
-@import '../../vendor/militer/assets/src/scss/variables';
+@import 'assets/src/scss/normalize';
+@import 'assets/src/scss/variables';
 @import 'variables';
-@import '../../vendor/militer/assets/src/scss/font-face';
+@import 'assets/src/scss/font-face';
 @include font-face('#{$font-family}');
-@import '../../vendor/militer/assets/src/scss/index';
+@import 'assets/src/scss/index';
 
 @import 'common/common';
 @import 'blocks/blocks';
@@ -15,7 +15,7 @@
 @import 'Main/sections/sections';
 @import 'Main/sections/popups/popups';
 
-@import '../../vendor/militer/assets/src/militerslider/militerslider';
+@import 'assets/src/militerslider/militerslider';
 @import 'Main/includes/includes';
 
 .red {

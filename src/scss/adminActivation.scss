@@ -1,6 +1,10 @@
-@import '../../vendor/militer/assets/src/scss/variables';
+@import '../../vendor/militer/assets/src/scss/_variables.scss';
+// #{$root}
+
 @import 'variables';
+
 @import '../../vendor/militer/assets/src/scss/index';
+// #{$vendor}
 
 .main {
     @extend %flex-col-c;

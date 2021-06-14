@@ -1,10 +1,10 @@
 'use strict';
 
 import {newFetch, fetchForm}
-    from '../../vendor/militer/assets/src/js/modules/Fetch';
+    from 'assets/modules/Fetch';
 import {clickHandler, popupHandler, dropdownHandler}
-    from '../../vendor/militer/assets/src/js/modules/Handler';
-
+    from 'assets/modules/Handler';
+import Slider from 'assets/militerslider/militerslider';
 
 window.addEventListener('popstate', () => newFetch(history.state));
 
@@ -63,7 +63,7 @@ if ($offerForm) {
                     $btnAdd.before($fieldsetClone);
                     $btnAdd.scrollIntoView({
                         behavior: 'smooth',
-                        block   : 'end'
+                        block:    'end'
                     });
                 }
                     break;
@@ -84,3 +84,16 @@ if ($offerForm) {
 
     });
 }
+
+new Slider({
+    main:          'slider',
+    arrowBtns:     false, // default true
+    prev:          '',
+    next:          '',
+    dots:          true, // default true
+    infinity:      true, // default true
+    auto:          true, // default true
+    autoInterval:  5, // default 5
+    slidesToShow:  1, // default 1
+    startPosition: 0, // default 0
+});

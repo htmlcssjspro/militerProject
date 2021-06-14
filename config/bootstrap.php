@@ -13,20 +13,21 @@ define('ADMIN_VIEWS',       _ROOT_ . '/Admin/Views');
 
 define('ERROR_LOG_FILE', _ROOT_ . '/log/errors.log');
 
+define('_CONFIG_', _ROOT_ . '/config');
 define('_PUBLIC_', _ROOT_ . '/public');
 
 define('PAGE_404', _PUBLIC_ . '/404.php');
 define('PAGE_400', _PUBLIC_ . '/400.php');
 
 //* Directories for pages & ajax
-define('UPLOADS', '/public/uploads');
+define('UPLOADS',   '/public/uploads');
+define('DOWNLOADS', '/public/downloads');
 
 define('API',  '/api/v1');
 
 
 
 define('DEV', true); // Установить в false на production
-// DEV ? error_reporting(E_ALL) : error_reporting(0);
 
 if (DEV) {
     ini_set('display_startup_errors', 1);

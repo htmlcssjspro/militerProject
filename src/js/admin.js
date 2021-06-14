@@ -1,9 +1,9 @@
 'use strict';
 
 import {newFetch, fetchForm}
-    from '../../vendor/militer/assets/src/js/modules/Fetch';
+    from 'assets/modules/Fetch';
 import {clickHandler, popupHandler, dropdownHandler}
-    from '../../vendor/militer/assets/src/js/modules/Handler';
+    from 'assets/modules/Handler';
 
 
 window.addEventListener('popstate', () => newFetch(history.state));

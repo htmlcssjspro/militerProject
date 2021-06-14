@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: localhost
--- Время создания: Июн 01 2021 г., 03:56
+-- Время создания: Июн 04 2021 г., 09:19
 -- Версия сервера: 5.7.27-30
 -- Версия PHP: 7.1.30
 
@@ -32,9 +32,9 @@ CREATE TABLE `admin` (
   `admin_uuid` varchar(36) NOT NULL,
   `email` varchar(32) NOT NULL,
   `password` varchar(255) NOT NULL,
-  `name` tinytext NOT NULL,
+  `name` varchar(32) NOT NULL,
   `admin_status` varchar(16) NOT NULL,
-  `status` varchar(16) NOT NULL DEFAULT 'admin',
+  `status` varchar(16) NOT NULL,
   `last_visit` date NOT NULL,
   `register_date` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -44,7 +44,7 @@ CREATE TABLE `admin` (
 --
 
 INSERT INTO `admin` (`id`, `admin_uuid`, `email`, `password`, `name`, `admin_status`, `status`, `last_visit`, `register_date`) VALUES
-(1, '4fc4042f-4dfc-4f5c-bfb8-5bbf215d0bfa', 'htmlcssjs.pro@gmail.com', '$2y$10$AzXPf7Frp0y/7r.JGQDJ6eEnPxrQJNL4OQQM4K4j1UgJMPxmc7jaO', 'SuperAdmin', 'superadmin', 'active', '2021-06-01', '0000-00-00');
+(1, '4fc4042f-4dfc-4f5c-bfb8-5bbf215d0bfa', 'militer@htmlcssjs.pro', '$2y$10$AzXPf7Frp0y/7r.JGQDJ6eEnPxrQJNL4OQQM4K4j1UgJMPxmc7jaO', 'Militer', 'superadmin', 'active', '2021-06-04', '0000-00-00');
 
 -- --------------------------------------------------------
 
@@ -53,14 +53,14 @@ INSERT INTO `admin` (`id`, `admin_uuid`, `email`, `password`, `name`, `admin_sta
 --
 
 CREATE TABLE `admin_layouts` (
-  `id` int(1) NOT NULL,
+  `id` int(1) UNSIGNED NOT NULL,
   `layout` varchar(32) NOT NULL,
-  `head` tinytext NOT NULL,
-  `header` tinytext NOT NULL,
-  `footer` tinytext NOT NULL,
-  `aside` tinytext NOT NULL,
-  `css` tinytext NOT NULL,
-  `js` tinytext NOT NULL,
+  `head` varchar(32) NOT NULL,
+  `header` varchar(32) NOT NULL,
+  `footer` varchar(32) NOT NULL,
+  `aside` varchar(32) NOT NULL,
+  `css` varchar(32) NOT NULL,
+  `js` varchar(32) NOT NULL,
   `current` tinyint(1) NOT NULL,
   `default` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -80,9 +80,9 @@ INSERT INTO `admin_layouts` (`id`, `layout`, `head`, `header`, `footer`, `aside`
 --
 
 CREATE TABLE `admin_popups` (
-  `id` int(1) NOT NULL,
-  `name` tinytext NOT NULL,
-  `file` tinytext NOT NULL
+  `id` int(1) UNSIGNED NOT NULL,
+  `name` varchar(32) NOT NULL,
+  `file` varchar(32) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -100,16 +100,16 @@ INSERT INTO `admin_popups` (`id`, `name`, `file`) VALUES
 --
 
 CREATE TABLE `admin_sitemap` (
-  `id` int(3) UNSIGNED NOT NULL,
+  `id` int(1) UNSIGNED NOT NULL,
   `page_uri` varchar(255) NOT NULL,
   `layout` varchar(32) NOT NULL,
-  `main_content` tinytext NOT NULL,
-  `page_css` tinytext NOT NULL,
-  `page_js` tinytext NOT NULL,
-  `label` tinytext NOT NULL,
-  `title` tinytext NOT NULL,
-  `description` tinytext NOT NULL,
-  `h1` tinytext NOT NULL,
+  `main_content` varchar(32) NOT NULL,
+  `page_css` varchar(32) NOT NULL,
+  `page_js` varchar(32) NOT NULL,
+  `label` varchar(32) NOT NULL,
+  `title` varchar(81) NOT NULL,
+  `description` varchar(300) NOT NULL,
+  `h1` varchar(255) NOT NULL,
   `header_nav` tinyint(1) NOT NULL DEFAULT '0',
   `header_nav_order` int(1) NOT NULL,
   `footer_nav` tinyint(1) NOT NULL DEFAULT '0',
@@ -130,7 +130,7 @@ INSERT INTO `admin_sitemap` (`id`, `page_uri`, `layout`, `main_content`, `page_c
 (450, 'admin/preferences', 'adminLayout', 'preferences', '', '', 'Настройки', 'preferences', 'preferences', 'preferences', 0, 0, 0, 0, 1, 4),
 (500, 'admin/login', 'simpleLayout', 'login', 'login', '', '', 'Admin Login', 'Admin Login', 'Admin Login', 0, 0, 0, 0, 0, 0),
 (510, 'admin/admin-activation', 'simpleLayout', 'adminActivation', 'adminActivation', '', '', 'Admin Activation', 'Admin Activation', 'Admin Activation', 0, 0, 0, 0, 0, 0),
-(520, 'admin/api-documentation', '', '', '', '', 'Api-documentation', 'Api-documentation', 'Api-documentation', '', 0, 0, 0, 0, 0, 0);
+(520, 'admin/api-documentation', 'simpleLayout', '', '', '', 'Api-documentation', 'Api-documentation', 'Api-documentation', '', 0, 0, 0, 0, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -139,14 +139,14 @@ INSERT INTO `admin_sitemap` (`id`, `page_uri`, `layout`, `main_content`, `page_c
 --
 
 CREATE TABLE `main_layouts` (
-  `id` int(1) NOT NULL,
+  `id` int(1) UNSIGNED NOT NULL,
   `layout` varchar(32) NOT NULL,
-  `head` tinytext NOT NULL,
-  `header` tinytext NOT NULL,
-  `footer` tinytext NOT NULL,
-  `aside` tinytext NOT NULL,
-  `css` tinytext NOT NULL,
-  `js` tinytext NOT NULL,
+  `head` varchar(32) NOT NULL,
+  `header` varchar(32) NOT NULL,
+  `footer` varchar(32) NOT NULL,
+  `aside` varchar(32) NOT NULL,
+  `css` varchar(32) NOT NULL,
+  `js` varchar(32) NOT NULL,
   `current` tinyint(1) NOT NULL,
   `default` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -157,7 +157,7 @@ CREATE TABLE `main_layouts` (
 
 INSERT INTO `main_layouts` (`id`, `layout`, `head`, `header`, `footer`, `aside`, `css`, `js`, `current`, `default`) VALUES
 (1, 'multyLayout', 'head', 'multyHeader', 'multyFooter', 'multyAside', 'main', 'main', 1, 1),
-(2, 'landingLayout', 'head', 'landingHeader', 'landingFooter', '', 'main', 'main', 0, 0),
+(2, 'landingLayout', 'head', 'landingHeader', 'landingFooter', 'landingAside', 'main', 'main', 0, 0),
 (3, 'simpleLayout', 'head', '', '', '', 'main', 'main', 0, 0);
 
 -- --------------------------------------------------------
@@ -167,9 +167,9 @@ INSERT INTO `main_layouts` (`id`, `layout`, `head`, `header`, `footer`, `aside`,
 --
 
 CREATE TABLE `main_popups` (
-  `id` int(1) NOT NULL,
-  `name` tinytext NOT NULL,
-  `file` tinytext NOT NULL
+  `id` int(1) UNSIGNED NOT NULL,
+  `name` varchar(32) NOT NULL,
+  `file` varchar(32) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -188,9 +188,9 @@ INSERT INTO `main_popups` (`id`, `name`, `file`) VALUES
 --
 
 CREATE TABLE `main_sections` (
-  `id` int(1) NOT NULL,
-  `name` tinytext NOT NULL,
-  `file` tinytext NOT NULL
+  `id` int(1) UNSIGNED NOT NULL,
+  `name` varchar(32) NOT NULL,
+  `file` varchar(32) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -208,16 +208,16 @@ INSERT INTO `main_sections` (`id`, `name`, `file`) VALUES
 --
 
 CREATE TABLE `main_sitemap` (
-  `id` int(3) UNSIGNED NOT NULL,
+  `id` int(1) UNSIGNED NOT NULL,
   `page_uri` varchar(255) NOT NULL,
   `layout` varchar(32) NOT NULL,
-  `main_content` tinytext NOT NULL,
-  `page_css` tinytext NOT NULL,
-  `page_js` tinytext NOT NULL,
-  `label` tinytext NOT NULL,
-  `title` tinytext NOT NULL,
-  `description` tinytext NOT NULL,
-  `h1` tinytext NOT NULL,
+  `main_content` varchar(32) NOT NULL,
+  `page_css` varchar(32) NOT NULL,
+  `page_js` varchar(32) NOT NULL,
+  `label` varchar(32) NOT NULL,
+  `title` varchar(81) NOT NULL,
+  `description` varchar(300) NOT NULL,
+  `h1` varchar(255) NOT NULL,
   `header_nav` tinyint(1) NOT NULL DEFAULT '0',
   `header_nav_order` int(1) NOT NULL,
   `footer_nav` tinyint(1) NOT NULL DEFAULT '0',
@@ -239,7 +239,8 @@ INSERT INTO `main_sitemap` (`id`, `page_uri`, `layout`, `main_content`, `page_cs
 (113, 'page3', 'multyLayout', 'page3', '', '', 'Page3', 'Page3', 'Page3', '', 1, 3, 1, 3, 1, 3, 1, 1),
 (114, 'page4', 'multyLayout', 'page4', '', '', 'Page4', 'Page4', 'Page4', '', 1, 4, 1, 4, 1, 4, 1, 1),
 (115, 'page5', 'multyLayout', 'page5', '', '', 'Page5', 'Page5', 'Page5', '', 1, 5, 1, 5, 1, 5, 1, 1),
-(118, 'user', 'multyLayout', 'user', '', '', 'Личный кабинет', 'Личный кабинет', 'Личный кабинет', '', 0, 0, 0, 0, 0, 0, 0, 0);
+(118, 'user', 'multyLayout', 'user', '', '', 'Личный кабинет', 'Личный кабинет', 'Личный кабинет', '', 0, 0, 0, 0, 0, 0, 0, 0),
+(200, 'access-restore', 'simpleLayout', 'accessRestore', '', '', 'Восстановление доступа', 'Восстановление доступа', 'Восстановление доступа', 'Восстановление доступа', 0, 0, 0, 0, 0, 0, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -248,13 +249,13 @@ INSERT INTO `main_sitemap` (`id`, `page_uri`, `layout`, `main_content`, `page_cs
 --
 
 CREATE TABLE `users` (
-  `id` int(11) UNSIGNED NOT NULL,
+  `id` int(1) UNSIGNED NOT NULL,
   `user_uuid` varchar(36) NOT NULL,
-  `username` varchar(255) NOT NULL,
-  `name` varchar(255) NOT NULL,
+  `username` varchar(32) NOT NULL,
+  `name` varchar(32) NOT NULL,
   `email` varchar(32) NOT NULL,
   `password` varchar(255) NOT NULL,
-  `status` varchar(12) NOT NULL DEFAULT 'user',
+  `status` varchar(32) NOT NULL DEFAULT 'user',
   `balance` decimal(6,2) NOT NULL DEFAULT '0.00',
   `phone` varchar(20) NOT NULL DEFAULT 'не указан',
   `about` text NOT NULL,
@@ -279,7 +280,7 @@ INSERT INTO `users` (`id`, `user_uuid`, `username`, `name`, `email`, `password`,
 --
 ALTER TABLE `admin`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `email` (`email`),
+  ADD UNIQUE KEY `login` (`email`),
   ADD UNIQUE KEY `admin_uuid` (`admin_uuid`);
 
 --
@@ -300,7 +301,8 @@ ALTER TABLE `admin_popups`
 --
 ALTER TABLE `admin_sitemap`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `page_uri` (`page_uri`);
+  ADD UNIQUE KEY `page_uri` (`page_uri`) USING BTREE,
+  ADD KEY `layout` (`layout`);
 
 --
 -- Индексы таблицы `main_layouts`
@@ -326,15 +328,16 @@ ALTER TABLE `main_sections`
 --
 ALTER TABLE `main_sitemap`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `page_uri` (`page_uri`);
+  ADD UNIQUE KEY `page_uri` (`page_uri`) USING BTREE,
+  ADD KEY `layout` (`layout`);
 
 --
 -- Индексы таблицы `users`
 --
 ALTER TABLE `users`
   ADD PRIMARY KEY (`user_uuid`),
-  ADD UNIQUE KEY `id` (`id`);
   ADD UNIQUE KEY `email` (`email`),
+  ADD UNIQUE KEY `id` (`id`);
 
 --
 -- AUTO_INCREMENT для сохранённых таблиц
@@ -344,55 +347,71 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT для таблицы `admin`
 --
 ALTER TABLE `admin`
-  MODIFY `id` int(1) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(1) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT для таблицы `admin_layouts`
 --
 ALTER TABLE `admin_layouts`
-  MODIFY `id` int(1) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(1) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT для таблицы `admin_popups`
 --
 ALTER TABLE `admin_popups`
-  MODIFY `id` int(1) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(1) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT для таблицы `admin_sitemap`
 --
 ALTER TABLE `admin_sitemap`
-  MODIFY `id` int(1) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=600;
+  MODIFY `id` int(1) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=521;
 
 --
 -- AUTO_INCREMENT для таблицы `main_layouts`
 --
 ALTER TABLE `main_layouts`
-  MODIFY `id` int(1) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(1) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT для таблицы `main_popups`
 --
 ALTER TABLE `main_popups`
-  MODIFY `id` int(1) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(1) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT для таблицы `main_sections`
 --
 ALTER TABLE `main_sections`
-  MODIFY `id` int(1) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(1) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT для таблицы `main_sitemap`
 --
 ALTER TABLE `main_sitemap`
-  MODIFY `id` int(1) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=300;
+  MODIFY `id` int(1) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=211;
 
 --
 -- AUTO_INCREMENT для таблицы `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(1) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(1) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- Ограничения внешнего ключа сохраненных таблиц
+--
+
+--
+-- Ограничения внешнего ключа таблицы `admin_sitemap`
+--
+ALTER TABLE `admin_sitemap`
+  ADD CONSTRAINT `admin_sitemap_ibfk_1` FOREIGN KEY (`layout`) REFERENCES `admin_layouts` (`layout`) ON UPDATE CASCADE;
+
+--
+-- Ограничения внешнего ключа таблицы `main_sitemap`
+--
+ALTER TABLE `main_sitemap`
+  ADD CONSTRAINT `main_sitemap_ibfk_1` FOREIGN KEY (`layout`) REFERENCES `main_layouts` (`layout`) ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
