@@ -1,10 +1,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="X-UA-Compatible" content="ie=edge">
-<title><?= $Model->title ?></title>
-<meta name="description" content="<?= $Model->description ?>">
-
+<title><?= $this->title ?></title>
+<meta name="description" content="<?= $this->description ?>">
 <meta name="author" content="Sergei MILITER Tarasov https://htmlcssjs.pro">
+<link rel="icon" href="/public/favicon.ico" type="image/x-icon">
 
-<link rel="preload" href="<?= $Model->mainJS ?>" as="script">
-<link rel="stylesheet" href="<?= $Model->mainCSS ?>">
+<?= $this->getLayoutCSS() ?>
+<?= $this->getMainCSS(true) ?>
+<?= $this->getLayoutJS(true) ?>
+<?= $this->getMainJS(true) ?>

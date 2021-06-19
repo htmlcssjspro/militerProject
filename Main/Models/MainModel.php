@@ -2,9 +2,9 @@
 
 namespace Main\Models;
 
-use Militer\mvcCore\Model\aMainApiModel;
+use Militer\mvcCore\Model\aMainModel;
 
-class MainApiModel extends aMainApiModel
+class MainModel extends aMainModel
 {
 
 

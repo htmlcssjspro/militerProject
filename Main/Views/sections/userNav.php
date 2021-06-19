@@ -1,7 +1,7 @@
 <section class="user__nav">
-    <span>Привет <strong><?= $Model->User->name ?></strong>!</span>
+    <span>Привет <strong><?= $this->User->name ?></strong>!</span>
     <div class="user__preferences">
-        <span>Баланс: <?= $Model->User->balance ?> р.</span>
+        <span>Баланс: <?= $this->User->balance ?> р.</span>
         <a href="/user">Личный кабинет</a>
         <a href="/user#orders">Мои заказы</a>
         <a href="/user#profile">Личная информация</a>

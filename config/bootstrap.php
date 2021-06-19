@@ -20,11 +20,14 @@ define('PAGE_404', _PUBLIC_ . '/404.php');
 define('PAGE_400', _PUBLIC_ . '/400.php');
 
 //* Directories for pages & ajax
-define('UPLOADS',   '/public/uploads');
-define('DOWNLOADS', '/public/downloads');
+// define('ROOT', "{$_SERVER['REQUEST_SCHEME']}://{$_SERVER['SERVER_NAME']}");
+$public = '/public';
+define('JS',        $public . '/js');
+define('CSS',       $public . '/css');
+define('UPLOADS',   $public . '/uploads');
+define('DOWNLOADS', $public . '/downloads');
 
 define('API',  '/api/v1');
-
 
 
 define('DEV', true); // Установить в false на production

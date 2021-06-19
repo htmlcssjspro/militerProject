@@ -1,4 +1,4 @@
-<h1><?= $Model->h1 ?></h1>
+<h1><?= $this->h1 ?></h1>
 <section class="preferences">
     <form action="/admin/api/admin-password-change" method="POST">
         <input type="hidden" name="csrf" value="<?= $_SESSION['csrf_token'] ?>">
@@ -17,7 +17,7 @@
         <button type="submit">Обновить</button>
     </form>
 
-    <?php if ($Model->User->adminStatus === 'superadmin') : ?>
+    <?php if ($this->User->adminStatus === 'superadmin') : ?>
         <form action="/admin/api/add-new-admin" method="POST">
             <input type="hidden" name="csrf" value="<?= $_SESSION['csrf_token'] ?>">
             <label>

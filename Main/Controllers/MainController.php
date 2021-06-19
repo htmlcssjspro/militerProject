@@ -2,18 +2,23 @@
 
 namespace Main\Controllers;
 
-use Main\Models\PageModel;
+use Main\Models\MainModel;
 use Militer\mvcCore\Controller\aPageController;
 
 class MainController extends aPageController
 {
-    protected PageModel $Model;
+    protected MainModel $Model;
 
 
-    public function __construct(PageModel $Model)
+    public function __construct(MainModel $Model)
     {
-        parent::__construct();
         $this->Model = $Model;
+        parent::__construct();
     }
 
+
+    public function method()
+    {
+        // Code
+    }
 }

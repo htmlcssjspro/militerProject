@@ -2,9 +2,9 @@
 
 namespace Admin\Models;
 
-use Militer\mvcCore\Model\aApiModel;
+use Militer\mvcCore\Model\aAdminApiModel;
 
-class AdminApiModel extends aApiModel
+class AdminApiModel extends aAdminApiModel
 {
 
 
@@ -14,26 +14,9 @@ class AdminApiModel extends aApiModel
     }
 
 
-    public function preferences(array $preferencesData)
+    public function test()
     {
         $this->adminCheck();
-        \extract($preferencesData);
-
-        $this->Response->sendResponse('adminPreferences', true);
-        $this->Response->sendResponse('adminPreferences', false);
-    }
-
-
-    private function adminCheck()
-    {
-        !isset($_SESSION['admin_uuid']) && $this->renderLoginPage();
-    }
-    private function renderLoginPage()
-    {
-        \ob_start();
-        $Model = $this;
-        require "{$this->views}/layouts/login.php";
-        $page = \ob_get_clean();
-        $this->Response->sendPage($page);
+        // Code
     }
 }

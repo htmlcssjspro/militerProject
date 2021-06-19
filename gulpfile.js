@@ -103,16 +103,12 @@ config.scss = {};
 config.scss.src = `${config.src}/scss`;
 config.scss.pub = `${config.pub}/css`;
 config.scss.srcGlobs = `${config.scss.src}/**/*.scss`;
-config.scss.sm = './maps';
-config.scss.smOpt = {sourceRoot: `/${config.scss.src}`};
 
 config.css = {};
 config.css.src = `${config.src}/css`;
 config.css.pub = `${config.pub}/css`;
 config.css.srcGlobs = `${config.css.src}/**/*.css`;
 config.css.pubGlobs = `${config.css.pub}/**/*.css`;
-config.css.sm = './maps';
-config.css.smOpt = {sourceRoot: `/${config.css.src}`};
 
 config.img = {};
 config.img.src = `${config.src}/img`;
@@ -156,15 +152,12 @@ config.srcGlobs = [
 ].flat();
 
 
-
-
 const options = {};
 options.src = {
-    base: '.',
-};
-options.srcNoBuf = {
-    base:   '.',
-    buffer: false
+    noBuf: {
+        base:   '.',
+        buffer: false
+    },
 };
 options.ftpClean = {
     base:   ftp.root,
@@ -200,10 +193,12 @@ function watcher() {
 
 
     //* SRC Watcher
-    options.watch.events = ['change', 'ready'];
+    options.watch.events = ['change', 'add', 'unlink', 'ready'];
     const srcWatcher = watch(config.srcGlobs, options.watch);
     srcWatcher.on('ready', () => logYellowFirst(pad('SRC', 3), scanMessage));
     srcWatcher.on('change', filePath => dispatch(change, filePath, c.bold.inverse(pad('CHANGESRC'))));
+    srcWatcher.on('add', filePath => dispatch(change, filePath, c.bold.inverse(pad('ADDSRC'))));
+    srcWatcher.on('unlink', filePath => dispatch(srcUnlink, filePath, c.bold.inverse(pad('DELSRC'))));
 
 
     //* IMG Watcher
@@ -250,19 +245,26 @@ function change(filePath) {
 //*** JavaScript
 //******************************************************************************
 function js(filePath) {
+    {
+        //* process.env.entry = JSON.stringify({name: path});
+        //* process.env.entryName = 'name'; //* default 'main' in webpack.common.js
+        //* process.env.entryPath = 'src/path'; //* abslute or relative path; default 'src/js/main.js' in webpack.common.js
+        //* process.env.outputFilename = '[name].js'; //* default '[name].js' in webpack.common.js
+        //* process.env.outputPath = config.js.pub; //* abslute or relative path, default 'public/js' in webpack.common.js
+    }
+
     const command = 'npx webpack --config ./webpack.gulp.js';
     process.env.mode = mode;
     if (filePath.startsWith(config.js.srcMod) ||
         filePath.startsWith(config.vendor.assets)
     ) {
         const entry = {};
-        return src([config.js.srcGlobs, '!' + config.js.srcModGlobs])
+        return src([config.js.srcGlobs, '!' + config.js.srcModGlobs], {base: config.js.src})
             .pipe(through2.obj(function(file, enc, cb) {
+                let {name} = path.parse(file.path);
+                const {relDir} = getDest(file.path, file.base);
+                name = path.posix.join(relDir, name);
                 const entry = slash(file.path);
-                const ext = path.extname(file.path);
-                const basename = path.basename(file.path, ext);
-                const rel = slash(path.dirname(path.relative(file.base, file.path)));
-                const name = path.posix.join(rel, basename);
                 const data = {[name]: entry};
                 // this.push(data);
                 cb(null, data);
@@ -271,36 +273,17 @@ function js(filePath) {
             .on('end', () => {
                 process.env.name = 'All JS files';
                 process.env.entry = JSON.stringify(entry);
-                // process.env.entryName = 'name'; //* 'main' is default in webpack.common.js
-                // process.env.entryPath = 'src/path'; //* abslute or relative path, 'src/js/main.js' is default in webpack.common.js
-                // process.env.output = JSON.stringify({
-                //     filename: '[name].js',
-                //     path:     resolve(config.js.pub), //* must be an abslute path
-                // });
-                // process.env.outputFilename = '[name].js'; //* '[name].js' is default in webpack.common.js
-                process.env.outputPath = config.js.pub; //* abslute or relative path, 'public/js' is default in webpack.common.js
+                process.env.outputPath = config.js.pub;
                 execute(command);
-                // execute(command, () => console.log('-- All JS files -- callback --'));
-                // execute(command, () => USE_FTP && ftpCopyNewer(config.js.pubGlobs));
             });
     } else {
-        const {destPath} = getDest(filePath, config.js.src, config.js.pub);
-        const ext = path.extname(filePath);
-        const baseName = path.basename(filePath, ext);
-        process.env.name = baseName;
-        process.env.entry = JSON.stringify({
-            [baseName]: resolve(filePath)
-        });
-        // process.env.entryName = 'name'; //* 'main' is default in webpack.common.js
-        // process.env.entryPath = 'src/path'; //* abslute or relative path, 'src/js/main.js' is default in webpack.common.js
-        // process.env.output = JSON.stringify({
-        //     filename: '[name].js',
-        //     path:     resolve(destPath), //* must be an abslute path
-        // });
-        // process.env.outputFilename = '[name].js'; //* '[name].js' is default in webpack.common.js
-        process.env.outputPath = destPath; //* abslute or relative path, 'public/js' is default in webpack.common.js
-        execute(command, () => console.log(`-- ${baseName} -- callback --`));
-        // execute(command, () => USE_FTP && ftpCopy(path.posix.join(config.js.pub, destPath, baseName + '.js?(.map)')));
+        const {name} = path.parse(filePath);
+        const {destDir} = getDest(filePath, config.js.src, config.js.pub);
+        process.env.name = name;
+        process.env.entryName = name;
+        process.env.entryPath = filePath;
+        process.env.outputPath = destDir;
+        execute(command);
     }
 }
 
@@ -309,10 +292,11 @@ function js(filePath) {
 //*** SCSS, CSS
 //******************************************************************************
 function scss(filePath) {
-    const baseName = path.basename(filePath);
-    const globs = baseName.startsWith('_') ? [config.scss.srcGlobs, '!**/_*.scss'] : filePath;
-    const {destPath} = getDest(globs, config.scss.src, config.scss.pub);
-    return src(globs)
+    const globs = path.basename(filePath).startsWith('_')
+        ? [config.scss.srcGlobs, '!**/_*.scss'] : filePath;
+    const sourceMapPath = 'maps';
+    const sourceRoot = path.posix.join('/', config.scss.src);
+    return src(globs, {base: config.scss.src})
         .pipe(gulpif(DEV, sourcemaps.init()))
         .pipe(gulpif(DEV, sourcemaps.identityMap()))
         .pipe(sassGlob())
@@ -327,26 +311,38 @@ function scss(filePath) {
             postcss([autoprefixer(), cssnano()]))
         )
         .pipe(gulpif(DEV,
-            sourcemaps.write(config.scss.sm, config.scss.smOpt))
+            sourcemaps.write(sourceMapPath, {sourceRoot}))
         )
         .pipe(gulpif(PROD, gcmq()))
-        .pipe(dest(destPath));
-    // .pipe(gulpif(USE_FTP, ftp.dest(ftpDest)));
+        .pipe(dest(config.scss.pub));
 }
 
 function css(filePath) {
-    const {destPath} = getDest(filePath, config.css.src, config.css.pub);
-    return src(filePath)
+    return src(filePath, {base: config.css.src})
         .pipe(gulpif(DEV, sourcemaps.init()))
         .pipe(gulpif(DEV,
             postcss([autoprefixer()]),
             postcss([autoprefixer(), cssnano()])
         ))
         .pipe(gulpif(DEV,
-            sourcemaps.write(config.css.sm, config.css.smOpt)))
+            sourcemaps.write('./maps', {sourceRoot: path.posix.join('/', config.css.src)})))
         .pipe(gulpif(PROD, gcmq()))
-        .pipe(dest(destPath));
-    // .pipe(gulpif(USE_FTP, ftp.dest(ftpDest)));
+        .pipe(dest(config.css.pub));
+}
+
+
+function srcUnlink(filePath) {
+    const ext = path.extname(filePath);
+    const js   = ext === '.js';
+    const scss = ext === '.scss';
+    const css  = ext === '.css';
+
+    const src = js && config.js.src || scss && config.scss.src || css && config.css.src;
+    const out = js && config.js.pub || scss && config.scss.pub || css && config.css.pub;
+    filePath = scss ? filePath.replace('.scss', '.css') : filePath;
+    const {rel, destFile} = getDest(filePath, src, out);
+    del(destFile);
+    del(path.posix.join(out, 'maps', rel + '.map'));
 }
 
 
@@ -355,12 +351,12 @@ function css(filePath) {
 //******************************************************************************
 
 function ftpCopy(globs) {
-    return USE_FTP && src(globs, options.srcNoBuf)
+    return USE_FTP && src(globs, options.src.noBuf)
         .pipe(ftp.dest(ftp.root))
         .on('data', file => logFile('COPYFTP', getDest(file.path).ftpFile));
 }
 function ftpCopyNewer(globs) {
-    return USE_FTP && src(globs, options.srcNoBuf)
+    return USE_FTP && src(globs, options.src.noBuf)
         .pipe(ftp.newer(ftp.root))
         .pipe(ftp.dest(ftp.root));
 }
@@ -382,38 +378,27 @@ function ftpUnlinkDir(folderPath) {
 //*** Image
 //******************************************************************************
 function img(filePath) {
-    const {destPath} = getDest(filePath, config.img.src, config.img.pub);
-    return src(filePath)
-        .pipe(dest(destPath))
-        // .pipe(gulpif(USE_FTP, ftp.dest(ftpDest)))
+    return src(filePath, {base: config.img.src})
+        .pipe(dest(config.img.pub))
         // .pipe(webp(webpConfig))
         .pipe(webp())
-        .pipe(dest(destPath));
-    // .pipe(gulpif(USE_FTP, ftp.dest(ftpDest)));
+        .pipe(dest(config.img.pub));
 }
 function imgUnlink(filePath) {
-    const ext = path.extname(filePath);
-    const baseNameGlobs = path.basename(filePath, ext) + '.*';
-    const {destPath} = getDest(filePath, config.img.src, config.img.pub);
-    const globs = path.posix.join(destPath, baseNameGlobs);
-    // const remoteImgs = path.posix.join(ftpDest, baseNameGlobs);
-    del(globs);
-    // (async() => await del(globs))();
-    // USE_FTP && ftp.delete(remoteImgs,
-    //     (param1, param2) => {
-    //         logFile('Удален файл изображения с сервера:', remoteImgs);
-    //         console.log('param1: ', param1);
-    //         console.log('param2: ', param2);
-    //     });
+    const {name} = path.parse(filePath);
+    const {destDir} = getDest(filePath, config.img.src, config.img.pub);
+    del(path.posix.join(destDir, name + '.*'));
 }
 
 
-
+//******************************************************************************
+//*** Refresh Remote Files
+//******************************************************************************
 function ftpRefresh(cb) {
     if (USE_FTP) {
         const cleanGlobs = config.ftpGlobs.map(item => path.posix.join(ftp.root, item));
         cleanGlobs.push('/*');
-        return src(config.ftpGlobs, options.srcNoBuf)
+        return src(config.ftpGlobs, options.src.noBuf)
             .pipe(ftp.newer(ftp.root))
             .pipe(ftp.dest(ftp.root))
             .on('end', () => ftp.clean(cleanGlobs, '.', options.ftpClean));
@@ -427,15 +412,16 @@ function ftpRefresh(cb) {
 //******************************************************************************
 //*** Helpers
 //******************************************************************************
-
 function getDest(globs, src = '.', out = '.') {
     let filePath = Array.isArray(globs) ? globs[0] : globs;
     filePath = filePath.replace('/**/', '/');
-    const rel = slash(path.relative(src, filePath));
-    const destPath = path.posix.join(out, path.posix.dirname(rel));
-    const ftpDest  = path.posix.join(ftp.root, destPath);
-    const ftpFile  = path.posix.join(ftp.root, out, rel);
-    return {destPath, ftpDest, ftpFile};
+    const rel      = slash(path.relative(src, filePath));
+    const relDir   = path.posix.dirname(rel);
+    const destFile = path.posix.join(out, rel);
+    const destDir  = path.posix.join(out, path.posix.dirname(rel));
+    const ftpFile  = path.posix.join(ftp.root, destFile);
+    const ftpDir   = path.posix.join(ftp.root, destDir);
+    return {rel, relDir, destFile, ftpFile, destDir, ftpDir};
 }
 function slash(filePath) {
     return filePath.split(path.sep).join(path.posix.sep);
@@ -443,16 +429,6 @@ function slash(filePath) {
 function resolve(relPath) {
     return slash(path.resolve(__dirname, relPath));
 }
-function execute(command, cb = () => {}) {
-    exec(command, (error, stdout, stderr) => {
-        logYellowFirst('Command:', command);
-        error && logError(error);
-        console.log(stdout); // eslint-disable-line no-console
-        stderr && logError('stderr:', stderr);
-        cb();
-    });
-}
-
 // function spawner(command, args, options = undefined, cb) {
 //     logYellowFirst('Command:', command);
 //     let child;
@@ -473,6 +449,15 @@ function execute(command, cb = () => {}) {
 //         cb(code);
 //     });
 // }
+function execute(command, cb = () => {}) {
+    exec(command, (error, stdout, stderr) => {
+        logYellowFirst('Command:', command);
+        error && logError(error);
+        console.log(stdout); // eslint-disable-line no-console
+        stderr && logError('stderr:', stderr);
+        cb();
+    });
+}
 
 
 //******************************************************************************
@@ -537,9 +522,10 @@ function log(...args) {
 function test(cb) {
     logHeader(c.greenBright('Gulp TEST'));
 
-    const globs = 'public/css/Main/**';
-    ftpUnlink(globs);
-
+    const globs = 'src/scss/Main/**';
+    return src(globs, {base: config.scss.src})
+        .pipe(dest('test/public'))
+        .on('data', file => console.log(file.history));
 
     cb(); // work
 }

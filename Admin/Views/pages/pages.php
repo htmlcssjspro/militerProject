@@ -1,7 +1,7 @@
-<h1><?= $Model->h1 ?></h1>
+<h1><?= $this->h1 ?></h1>
 <section class="admin__pages">
     <button class="btn_newpage" type="button" data-popup=".newpage">Добавить новую страницу</button>
-    <?php foreach ($Model->getPagesData() as $pageData) : ?>
+    <?php foreach ($this->getPagesData() as $pageData) : ?>
         <form action="/admin/api/updatesitemap" method="POST">
             <input type="hidden" name="csrf" value="<?= $_SESSION['csrf_token'] ?>">
             <fieldset>

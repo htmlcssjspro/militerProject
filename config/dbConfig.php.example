@@ -4,7 +4,7 @@ return [
     'driver'      => 'mysql',
     'host'        => 'localhost',
     'port'        => '3306',
-    'name'        => 'name', // Имя базы даных
+    'name'        => 'dbName', // Имя базы даных
     'username'    => 'username', // Имя пользователя
     'password'    => 'password', // Пароль
     'pdo_options' => [

@@ -56,10 +56,10 @@ $definitions = [
         return $index ? $response[$index] : $response;
     },
 
-    'dictionary' => function (string $index = null) {
-        $dictionary = require _CONFIG_ . '/dictionary.php';
-        return $index ? $dictionary[$index] : $dictionary;
-    },
+    // 'dictionary' => function (string $index = null) {
+    //     $dictionary = require _CONFIG_ . '/dictionary.php';
+    //     return $index ? $dictionary[$index] : $dictionary;
+    // },
 
     // 'email' => function (string $index = null) {
     //     $email = require _CONFIG_ . '/email.php';

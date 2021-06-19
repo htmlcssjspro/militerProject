@@ -1,0 +1,11 @@
+@import 'assets/src/scss/variables';
+@import 'variables';
+@import 'assets/src/scss/index';
+
+.main {
+    @extend %flex-col-c;
+}
+
+.login {
+    width: 400px;
+}

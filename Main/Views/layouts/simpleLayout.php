@@ -2,24 +2,24 @@
 <html lang="ru">
 
 <head>
-    <?php require $Model->head; ?>
+    <?php require $this->head; ?>
 </head>
 
 <body class="body">
 
     <main id="main" class="main">
-        <?php require $Model->mainContent; ?>
+        <?php require $this->mainContent; ?>
     </main>
 
 
-    <?php if ($Model->pageCSS) : ?>
-        <link rel="stylesheet" href="<?= $Model->pageCSS ?>">
+    <?php if ($this->pageCSS) : ?>
+        <link rel="stylesheet" href="<?= $this->pageCSS ?>">
     <?php endif; ?>
 
-    <script defer src="<?= $Model->mainJS ?>"></script>
+    <script defer src="<?= $this->mainJS ?>"></script>
 
-    <?php if ($Model->pageJS) : ?>
-        <script defer src="<?= $Model->pageJS ?>"></script>
+    <?php if ($this->pageJS) : ?>
+        <script defer src="<?= $this->pageJS ?>"></script>
     <?php endif; ?>
 
 </body>

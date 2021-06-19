@@ -61,23 +61,6 @@ return [
         ],
     ],
 
-    'adminLogin' => [
-        'success' => [
-            'message' => 'Успешный вход в систему',
-            'reload'  => true,
-        ],
-        'error' => [
-            'message' => 'Неправильный логин или пароль'
-        ],
-    ],
-
-    'adminLogout' => [
-        'success' => [
-            'message' => 'Вы вышли из системы',
-            'reload'  => true,
-        ],
-    ],
-
     'adminVerify' => [
         'error' => [
             'message' => 'Неверный пароль администратора'
@@ -112,6 +95,19 @@ return [
         ],
         'exists' => [
             'message' => 'Администратор с указанным email уже существует'
+        ],
+
+    ],
+    'adminActivate' => [
+        'success' => [
+            'message' => 'Успешная активация',
+            'location' => '/admin'
+        ],
+        'error' => [
+            'message' => 'Ошибка активации нового администратора'
+        ],
+        'noExists' => [
+            'message' => 'Администратор с указанным email не существует'
         ],
     ],
 
