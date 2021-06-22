@@ -4,10 +4,11 @@ namespace Admin\Controllers;
 
 use Admin\Models\AdminApiModel;
 use Militer\mvcCore\Controller\aAdminApiController;
+use Militer\mvcCore\Model\iAdminApiModel;
 
 class AdminApiController extends aAdminApiController
 {
-    public AdminApiModel $Model;
+    public iAdminApiModel $Model;
 
 
     public function __construct(AdminApiModel $Model)
@@ -25,6 +26,6 @@ class AdminApiController extends aAdminApiController
 
     public function test()
     {
-        $this->User->test();
+        $this->Model->test();
     }
 }

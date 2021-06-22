@@ -1,14 +1,14 @@
 @import 'assets/src/scss/normalize';
 @import 'assets/src/scss/variables';
-@import 'variables';
+@import 'common/variables';
 @import 'assets/src/scss/font-face';
 @include font-face('#{$font-family}');
 @import 'assets/src/scss/index';
 
 @import 'common/common';
-@import 'blocks/blocks';
-@import 'sections/sections';
-@import 'sections/popups/popups';
+@import 'common/blocks/blocks';
+@import 'common/sections/sections';
+@import 'common/sections/popups/popups';
 
 @import 'Main/components/components';
 @import 'Main/blocks/blocks';

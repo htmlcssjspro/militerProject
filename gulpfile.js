@@ -264,8 +264,8 @@ function js(filePath) {
                 let {name} = path.parse(file.path);
                 const {relDir} = getDest(file.path, file.base);
                 name = path.posix.join(relDir, name);
-                const entry = slash(file.path);
-                const data = {[name]: entry};
+                const entryPath = slash(file.path);
+                const data = {[name]: entryPath};
                 // this.push(data);
                 cb(null, data);
             }))
@@ -278,11 +278,11 @@ function js(filePath) {
             });
     } else {
         const {name} = path.parse(filePath);
-        const {destDir} = getDest(filePath, config.js.src, config.js.pub);
+        const {relDir} = getDest(filePath, config.js.src);
         process.env.name = name;
-        process.env.entryName = name;
+        process.env.entryName = path.posix.join(relDir, name);
         process.env.entryPath = filePath;
-        process.env.outputPath = destDir;
+        process.env.outputPath = config.js.pub; // default
         execute(command);
     }
 }
@@ -340,9 +340,9 @@ function srcUnlink(filePath) {
     const src = js && config.js.src || scss && config.scss.src || css && config.css.src;
     const out = js && config.js.pub || scss && config.scss.pub || css && config.css.pub;
     filePath = scss ? filePath.replace('.scss', '.css') : filePath;
-    const {rel, destFile} = getDest(filePath, src, out);
+    const {relFile, destFile} = getDest(filePath, src, out);
     del(destFile);
-    del(path.posix.join(out, 'maps', rel + '.map'));
+    del(path.posix.join(out, 'maps', relFile + '.map'));
 }
 
 
@@ -415,13 +415,13 @@ function ftpRefresh(cb) {
 function getDest(globs, src = '.', out = '.') {
     let filePath = Array.isArray(globs) ? globs[0] : globs;
     filePath = filePath.replace('/**/', '/');
-    const rel      = slash(path.relative(src, filePath));
-    const relDir   = path.posix.dirname(rel);
-    const destFile = path.posix.join(out, rel);
-    const destDir  = path.posix.join(out, path.posix.dirname(rel));
+    const relFile  = slash(path.relative(src, filePath));
+    const relDir   = path.posix.dirname(relFile);
+    const destFile = path.posix.join(out, relFile);
+    const destDir  = path.posix.join(out, path.posix.dirname(relFile));
     const ftpFile  = path.posix.join(ftp.root, destFile);
     const ftpDir   = path.posix.join(ftp.root, destDir);
-    return {rel, relDir, destFile, ftpFile, destDir, ftpDir};
+    return {relFile, relDir, destFile, ftpFile, destDir, ftpDir};
 }
 function slash(filePath) {
     return filePath.split(path.sep).join(path.posix.sep);
@@ -522,10 +522,14 @@ function log(...args) {
 function test(cb) {
     logHeader(c.greenBright('Gulp TEST'));
 
-    const globs = 'src/scss/Main/**';
-    return src(globs, {base: config.scss.src})
-        .pipe(dest('test/public'))
-        .on('data', file => console.log(file.history));
+    // const globs = 'src/scss/Main/**';
+    // return src(globs, {base: config.scss.src})
+    //     .pipe(dest('test/public'))
+    //     .on('data', file => console.log(file.history));
+
+    const filePath = 'src/js/admin/admin.js';
+    const name = slash(path.relative(config.js.src, filePath));
+    console.log('name: ', name);
 
     cb(); // work
 }

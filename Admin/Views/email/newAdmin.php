@@ -3,7 +3,7 @@
 $subject   = 'Доступ к панели администратора';
 $preheader = 'Вам предоставлен доступ к панели администратора';
 $from = $getEmail('noreply');
-$href = $getHref('admin/admin-activation');
+$href = $getHref('admin');
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -34,25 +34,27 @@ $href = $getHref('admin/admin-activation');
                 <td>Ваши данные для доступа:</td>
             </tr>
         </tbody>
-        <tr>
-            <td>
-                <table style="width: 600px; margin: auto;">
-                    <tr>
-                        <td>Логин:</td>
-                        <td><?= $email ?></td>
-                    </tr>
-                    <tr>
-                        <td>Пароль:</td>
-                        <td><?= $password ?></td>
-                    </tr>
-                    <tr align="center" style="height: 2rem;">
-                        <td colspan="2">
-                            <a href="<?= $href ?>">Активировать учетную запись администратора</a>
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
+        <tbody>
+            <tr>
+                <td>
+                    <table style="width: 600px; margin: auto;">
+                        <tr>
+                            <td>Логин:</td>
+                            <td><?= $email ?></td>
+                        </tr>
+                        <tr>
+                            <td>Пароль:</td>
+                            <td><?= $password ?></td>
+                        </tr>
+                        <tr align="center" style="height: 2rem;">
+                            <td colspan="2">
+                                <a href="<?= $href ?>">Активировать учетную запись администратора</a>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </tbody>
         <tbody>
             <tr>
                 <td>Сохраните эти данные</td>

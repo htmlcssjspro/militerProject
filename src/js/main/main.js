@@ -2,14 +2,13 @@
 
 import {newFetch, fetchForm}
     from 'assets/modules/Fetch';
-import {clickHandler, popupHandler, dropdownHandler}
+import {clickHandler, popupHandler}
     from 'assets/modules/Handler';
 import Slider from 'assets/militerslider/militerslider';
 
 window.addEventListener('popstate', () => newFetch(history.state));
 
 clickHandler();
-dropdownHandler();
 
 
 const $townSelector = document.querySelector('.town-selector select');

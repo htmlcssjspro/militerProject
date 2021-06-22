@@ -1,13 +1,8 @@
 .btn {
     & {
-        @extend %btn;
     }
-    $btn: &;
 
-    &__inline {
-        @extend #{$btn};
-        display: inline-block;
-    }
+    $btn: &;
 
     &_enter {
         @extend #{$btn};

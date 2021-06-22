@@ -1,0 +1,11 @@
+.dropdown {
+    & {
+        @extend %dropdown;
+    }
+    &__toggle {
+        @extend %dropdown__toggle;
+    }
+    &__content {
+        @extend %dropdown__content;
+    }
+}

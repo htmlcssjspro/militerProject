@@ -17,7 +17,6 @@ class User extends aUser
 
     public function test()
     {
-        $admins = $this->getAdminsData();
-        \prd($admins, '$admins');
+        // Code
     }
 }
