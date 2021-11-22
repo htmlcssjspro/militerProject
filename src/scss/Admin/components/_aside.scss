@@ -1,15 +1,14 @@
 .aside {
     & {
         @extend %aside;
-        // @extend %container;
         @extend %dev_container;
         @include flex(1, 1, 3);
+        max-width: 250px;
     }
 
     &__wrapper,
     &__top,
     &__bottom {
-        // @extend %wrapper;
         @extend %dev_wrapper;
     }
 }

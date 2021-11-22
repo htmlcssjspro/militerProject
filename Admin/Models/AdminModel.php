@@ -15,15 +15,9 @@ class AdminModel extends aAdminModel
     }
 
 
-    public function init(string $requestUri): void
-    {
-        parent::init($requestUri);
-    }
 
-
-    public function test()
+    public function method()
     {
-        $this->adminCheck();
         // Code
     }
 }

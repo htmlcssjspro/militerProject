@@ -5,8 +5,3 @@
 <meta name="description" content="<?= $this->description ?>">
 <meta name="author" content="Sergei MILITER Tarasov https://htmlcssjs.pro">
 <link rel="icon" href="/public/favicon.ico" type="image/x-icon">
-
-<?= $this->getLayoutCSS() ?>
-<?= $this->getMainCSS(true) ?>
-<?= $this->getLayoutJS(true) ?>
-<?= $this->getMainJS(true) ?>

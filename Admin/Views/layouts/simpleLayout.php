@@ -2,7 +2,11 @@
 <html lang="ru">
 
 <head>
-    <?php $this->getComponent('head'); ?>
+    <?php $this->getHead(); ?>
+    <?= $this->getLayoutCSS() ?>
+    <?= $this->getMainCSS(true) ?>
+    <?= $this->getLayoutJS(true) ?>
+    <?= $this->getMainJS(true) ?>
 </head>
 
 <body class="body">

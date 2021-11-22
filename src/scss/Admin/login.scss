@@ -1,6 +1,5 @@
-@import 'assets/src/scss/variables';
+@import 'assets/src/scss/index.lib';
 @import 'common/variables';
-@import 'assets/src/scss/index';
 
 .main {
     @extend %flex-col-c;

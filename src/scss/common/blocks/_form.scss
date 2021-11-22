@@ -41,10 +41,10 @@ form {
             outline-style: auto;
             outline-color: $red;
         }
-        &.error_input {
-            // visibility: hidden;
-            color: $danger;
-        }
+    }
+    span.error_input {
+        // visibility: hidden;
+        color: $danger;
     }
     select {
         & {

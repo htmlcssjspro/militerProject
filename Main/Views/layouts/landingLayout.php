@@ -2,33 +2,30 @@
 <html lang="ru">
 
 <head>
-    <?php require $this->head; ?>
+    <?php $this->getHead(); ?>
+    <?= $this->getLayoutCSS() ?>
+    <?= $this->getMainCSS(true) ?>
+    <?= $this->getLayoutJS(true) ?>
+    <?= $this->getMainJS(true) ?>
 </head>
 
 <body class="body">
 
     <header id="header" class="header">
-        <?php require $this->header; ?>
+        <?php $this->getHeader(); ?>
     </header>
 
     <main id="main" class="main">
-        <?php require $this->mainContent; ?>
+        <?php $this->getMainContent(); ?>
     </main>
 
     <footer id="footer" class="footer">
-        <?php require $this->footer; ?>
+        <?php $this->getComponent('footer'); ?>
     </footer>
 
-
-    <?php if ($this->pageCSS) : ?>
-        <link rel="stylesheet" href="<?= $this->pageCSS ?>">
-    <?php endif; ?>
-
-    <script defer src="<?= $this->mainJS ?>"></script>
-
-    <?php if ($this->pageJS) : ?>
-        <script defer src="<?= $this->pageJS ?>"></script>
-    <?php endif; ?>
+    <?= $this->getMainCSS(); ?>
+    <?= $this->getLayoutJS(); ?>
+    <?= $this->getMainJS(); ?>
 
 </body>
 

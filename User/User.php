@@ -15,7 +15,7 @@ class User extends aUser
     }
 
 
-    public function test()
+    public function method()
     {
         // Code
     }

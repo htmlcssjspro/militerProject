@@ -1,5 +1,7 @@
 <?php
 
+use Admin\Models\AdminApiModel;
+use Main\Models\MainApiModel;
 use Militer\mvcCore\Csrf\iCsrf;
 use Militer\mvcCore\Csrf\Csrf;
 use Militer\mvcCore\DI\iContainer;
@@ -8,6 +10,8 @@ use Militer\mvcCore\Http\Request\iRequest;
 use Militer\mvcCore\Http\Request\Request;
 use Militer\mvcCore\Http\Response\iResponse;
 use Militer\mvcCore\Http\Response\Response;
+use Militer\mvcCore\Model\interfaces\iAdminApiModel;
+use Militer\mvcCore\Model\interfaces\iMainApiModel;
 use Militer\mvcCore\PDO\iDB;
 use Militer\mvcCore\PDO\DB;
 use Militer\mvcCore\PDO\iPDO;
@@ -15,9 +19,9 @@ use Militer\mvcCore\PDO\PDO;
 use Militer\mvcCore\Router\iRouter;
 use Militer\mvcCore\Router\Router;
 use Militer\mvcCore\User\iUser;
-use User\User;
 use Militer\mvcCore\View\iView;
 use Militer\mvcCore\View\View;
+use User\User;
 
 
 $aliases = [
@@ -32,6 +36,11 @@ $aliases = [
     iRequest::class  => Request::class,
     iResponse::class => Response::class,
     iView::class     => View::class,
+
+    // iMainModel::class     => MainModel::class,
+    iMainApiModel::class     => MainApiModel::class,
+    // iAdminModel::class    => AdminModel::class,
+    iAdminApiModel::class    => AdminApiModel::class,
 ];
 
 

@@ -1,0 +1,13 @@
+.btn {
+    & {
+    }
+    $btn: &;
+
+    &_logout {
+        @extend #{$btn};
+    }
+
+    &_new-page {
+        @extend #{$btn};
+    }
+}

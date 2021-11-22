@@ -1,0 +1,5 @@
+.bg {
+    &_danger {
+        @extend %bg_danger;
+    }
+}

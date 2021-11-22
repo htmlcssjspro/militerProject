@@ -24,29 +24,29 @@ const {src, dest, watch} = require('gulp');
 //     metadata    : 'none', // string | string[], *none | all | exif | icc | xmp
 //     // buffer: // Buffer: Buffer to optimize
 // };
-const gulpif     = require('gulp-if');
+const gulpif = require('gulp-if');
 const sourcemaps = require('gulp-sourcemaps');
-const del        = require('del');
-const webp       = require('gulp-webp');
+const del = require('del');
+const webp = require('gulp-webp');
 
 //* SCSS
-const sass         = require('gulp-sass');
-sass.compiler      = require('node-sass'); // eslint-disable-line no-multi-spaces
-const sassGlob     = require('gulp-sass-glob');
-const postcss      = require('gulp-postcss');
+const sass = require('gulp-sass');
+sass.compiler = require('node-sass'); // eslint-disable-line no-multi-spaces
+const sassGlob = require('gulp-sass-glob');
+const postcss = require('gulp-postcss');
 const autoprefixer = require('autoprefixer');
-const cssnano      = require('cssnano');
-const gcmq         = require('gulp-group-css-media-queries');
+const cssnano = require('cssnano');
+const gcmq = require('gulp-group-css-media-queries');
 
 //* npm CommonJS
 // const {exec, execSync, spawn, spawnSync} = require('child_process');
-const {exec}   = require('child_process');
-const path     = require('path');
-const c        = require('ansi-colors');
+const {exec} = require('child_process');
+const path = require('path');
+const c = require('ansi-colors');
 const through2 = require('through2');
 
 //* FTP
-const vinylFtp  = require('vinyl-ftp');
+const vinylFtp = require('vinyl-ftp');
 const ftpConfig = require('./ftpConfig');
 let ftp = {};
 ftp = vinylFtp.create({
@@ -64,7 +64,7 @@ ftp.root = ftpConfig.root ? ftpConfig.root : '/';
 //*****************************************************************************
 //*** Project Settings
 //*****************************************************************************
-const DEV     = true;   // * true | false
+const DEV = true;   // * true | false
 const USE_FTP = true;   // * true | false
 //*****************************************************************************
 
@@ -122,11 +122,11 @@ config.public = {
 };
 
 config.vendor = {};
-config.vendor.src = 'vendor/militer';
-config.vendor.assets = `${config.vendor.src}/assets/src`;
+config.vendor.militer = 'vendor/militer';
+config.vendor.assets = `${config.vendor.militer}/assets/src`;
 config.vendor.phpGlobs = [
-    `${config.vendor.src}/mvc-core/src/**/*.php`,
-    `${config.vendor.src}/cms-core/src/**/*.php`,
+    `${config.vendor.militer}/mvc-core/src/**/*.php`,
+    `${config.vendor.militer}/cms-core/src/**/*.php`,
     'vendor/composer/*.php',
     'vendor/autoload.php',
 ];
@@ -240,7 +240,6 @@ function change(filePath) {
 }
 
 
-
 //******************************************************************************
 //*** JavaScript
 //******************************************************************************
@@ -303,7 +302,7 @@ function scss(filePath) {
         .pipe(sass({
             includePaths: [
                 config.scss.src,
-                config.vendor.src,
+                config.vendor.militer,
             ],
         }).on('error', sass.logError))
         .pipe(gulpif(DEV,
@@ -333,9 +332,9 @@ function css(filePath) {
 
 function srcUnlink(filePath) {
     const ext = path.extname(filePath);
-    const js   = ext === '.js';
+    const js = ext === '.js';
     const scss = ext === '.scss';
-    const css  = ext === '.css';
+    const css = ext === '.css';
 
     const src = js && config.js.src || scss && config.scss.src || css && config.css.src;
     const out = js && config.js.pub || scss && config.scss.pub || css && config.css.pub;
@@ -415,12 +414,12 @@ function ftpRefresh(cb) {
 function getDest(globs, src = '.', out = '.') {
     let filePath = Array.isArray(globs) ? globs[0] : globs;
     filePath = filePath.replace('/**/', '/');
-    const relFile  = slash(path.relative(src, filePath));
-    const relDir   = path.posix.dirname(relFile);
+    const relFile = slash(path.relative(src, filePath));
+    const relDir = path.posix.dirname(relFile);
     const destFile = path.posix.join(out, relFile);
-    const destDir  = path.posix.join(out, path.posix.dirname(relFile));
-    const ftpFile  = path.posix.join(ftp.root, destFile);
-    const ftpDir   = path.posix.join(ftp.root, destDir);
+    const destDir = path.posix.join(out, path.posix.dirname(relFile));
+    const ftpFile = path.posix.join(ftp.root, destFile);
+    const ftpDir = path.posix.join(ftp.root, destDir);
     return {relFile, relDir, destFile, ftpFile, destDir, ftpDir};
 }
 function slash(filePath) {
@@ -449,7 +448,7 @@ function resolve(relPath) {
 //         cb(code);
 //     });
 // }
-function execute(command, cb = () => {}) {
+function execute(command, cb = () => { }) {
     exec(command, (error, stdout, stderr) => {
         logYellowFirst('Command:', command);
         error && logError(error);

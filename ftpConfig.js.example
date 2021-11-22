@@ -1,8 +1,8 @@
 'use strict';
 
 module.exports = {
-    host    : '37.140.192.202',
-    user    : 'u1036142_user',
+    host: '37.140.192.202',
+    user: 'u1036142_user',
     password: 'password',
-    root    : '/',
+    root: '/',
 };

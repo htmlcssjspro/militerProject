@@ -1,10 +1,12 @@
 <?php
+// страницы с layout
 $pageList = [
     'main' => [
         'class'      => 'main-page-list',
         'h2'         => 'Страницы сайта',
         'action'     => '/admin/api/update-main-sitemap',
         'pageList'   => $this->getMainPageListData(),
+        'layoutList' => $this->getMainLayoutList(),
         'popup'      => 'main-new-page',
     ],
     'admin' => [
@@ -12,6 +14,7 @@ $pageList = [
         'h2'         => 'Страницы панели администратора',
         'action'     => '/admin/api/update-admin-sitemap',
         'pageList'   => $this->getAdminPageListData(),
+        'layoutList' => $this->getAdminLayoutList(),
         'popup'      => 'admin-new-page',
     ],
 ];
@@ -49,6 +52,18 @@ $pageList = [
                                 <label>
                                     <span>H1</span>
                                     <span><input type="text" name="h1" value="<?= $pageData['h1'] ?>"></span>
+                                </label>
+                                <label>
+                                    <span>Layout</span>
+                                    <span>
+                                        <select name="layout">
+                                            <?php foreach ($list['layoutList'] as $layout) : ?>
+                                                <option value="<?= $layout ?>" <?= $layout === $pageData['layout'] ? 'selected' : '' ?>>
+                                                    <?= $layout ?>
+                                                </option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                    </span>
                                 </label>
                                 <label>
                                     <span>Main Content</span>

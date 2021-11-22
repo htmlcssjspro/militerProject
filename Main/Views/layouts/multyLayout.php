@@ -2,13 +2,17 @@
 <html lang="ru">
 
 <head>
-    <?php $this->getComponent('head'); ?>
+    <?php $this->getHead(); ?>
+    <?= $this->getLayoutCSS() ?>
+    <?= $this->getMainCSS(true) ?>
+    <?= $this->getLayoutJS(true) ?>
+    <?= $this->getMainJS(true) ?>
 </head>
 
 <body class="body">
 
     <header id="header" class="header">
-        <?php $this->getComponent('header'); ?>
+        <?php $this->getHeader(); ?>
     </header>
 
     <div class="content">
@@ -18,13 +22,13 @@
             </main>
 
             <aside id="aside" class="aside">
-                <?php $this->getComponent('aside'); ?>
+                <?php $this->getAside(); ?>
             </aside>
         </div>
     </div>
 
     <footer id="footer" class="footer">
-        <?php $this->getComponent('footer'); ?>
+        <?php $this->getFooter(); ?>
     </footer>
 
 

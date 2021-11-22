@@ -1,6 +1,8 @@
-vendor
+.vscode
+*.code-workspace
+
 node_modules
-test
+vendor
 
 config/dbConfig.php
 log/errors.log
@@ -12,9 +14,8 @@ ftpConfig.js
 
 package-lock.json
 
-.vscode
-*.code-workspace
-
 test
 test.js
 testModule.js
+
+Main/Views/sections/yashare-help.php

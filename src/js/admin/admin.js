@@ -2,13 +2,18 @@
 
 import {newFetch, fetchForm}
     from 'assets/modules/Fetch';
-import {clickHandler, popupHandler}
+import clickHandler
     from 'assets/modules/Handler';
 
 
 window.addEventListener('popstate', () => newFetch(history.state));
 
 clickHandler({
+    addNewMainPage(t) {
+
+    },
+
+
     del(t) {
         const $label = t.closest('label');
         const $input = $label.querySelector('input[name="newname[]"]');

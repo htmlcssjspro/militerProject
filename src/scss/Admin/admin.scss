@@ -1,9 +1,6 @@
-@import 'assets/src/scss/normalize';
-@import 'assets/src/scss/variables';
-@import 'common/variables';
-@import 'assets/src/scss/font-face';
-@include font-face('#{$font-family}');
 @import 'assets/src/scss/index';
+@import 'common/variables';
+@include font-face('#{$font-family}');
 
 @import 'common/common';
 @import 'common/blocks/blocks';

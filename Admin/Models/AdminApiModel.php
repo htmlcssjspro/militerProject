@@ -14,7 +14,7 @@ class AdminApiModel extends aAdminApiModel
     }
 
 
-    public function test()
+    public function method()
     {
         $this->adminCheck();
         // Code
